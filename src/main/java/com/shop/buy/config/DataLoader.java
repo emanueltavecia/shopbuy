@@ -7,13 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.shop.buy.model.Brand;
-import com.shop.buy.model.Customer;
-import com.shop.buy.model.Employee;
-import com.shop.buy.model.Product;
-import com.shop.buy.model.Sale;
-import com.shop.buy.model.SaleItem;
-import com.shop.buy.model.Supplier;
+import com.shop.buy.model.*;
 import com.shop.buy.repository.*;
 
 @Configuration
@@ -56,17 +50,17 @@ public class DataLoader {
             brandRepository.save(levis);
             
             // Create categories
-            com.shop.buy.model.Category shirts = new com.shop.buy.model.Category();
+            Category shirts = new Category();
             shirts.setName("Shirts");
             shirts.setDescription("All types of shirts and t-shirts");
             categoryRepository.save(shirts);
             
-            com.shop.buy.model.Category pants = new com.shop.buy.model.Category();
+            Category pants = new Category();
             pants.setName("Pants");
             pants.setDescription("Jeans, trousers, and other leg wear");
             categoryRepository.save(pants);
             
-            com.shop.buy.model.Category shoes = new com.shop.buy.model.Category();
+            Category shoes = new Category();
             shoes.setName("Shoes");
             shoes.setDescription("Footwear of all types");
             categoryRepository.save(shoes);
