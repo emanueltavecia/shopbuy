@@ -1,11 +1,13 @@
 package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.BrandDTO;
+import com.shop.buy.exception.DuplicateResourceException;
+import com.shop.buy.exception.ResourceNotFoundException;
 import com.shop.buy.model.Brand;
 import com.shop.buy.repository.BrandRepository;
 import com.shop.buy.service.BrandService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandDTO getBrandById(Long id) {
         Brand brand = brandRepository.findBrandById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
         return convertToDTO(brand);
     }
 
@@ -53,9 +55,26 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public BrandDTO createBrand(BrandDTO brandDTO) {
-        Brand brand = convertToEntity(brandDTO);
-        Brand savedBrand = brandRepository.saveBrand(brand);
-        return convertToDTO(savedBrand);
+        // Check if brand with same name already exists
+        brandRepository.findBrandsByNameContaining(brandDTO.getName()).stream()
+                .filter(b -> b.getName().equalsIgnoreCase(brandDTO.getName()))
+                .findFirst()
+                .ifPresent(brand -> {
+                    throw new DuplicateResourceException("Brand", "name", brandDTO.getName());
+                });
+                
+        try {
+            Brand brand = convertToEntity(brandDTO);
+            Brand savedBrand = brandRepository.saveBrand(brand);
+            return convertToDTO(savedBrand);
+        } catch (DataIntegrityViolationException e) {
+            // This will catch any database constraint violations
+            if (e.getMessage().contains("unique") || (e.getRootCause() != null && 
+                    e.getRootCause().getMessage().contains("unique"))) {
+                throw new DuplicateResourceException("Brand with the same name already exists");
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -63,11 +82,28 @@ public class BrandServiceImpl implements BrandService {
     public BrandDTO updateBrand(Long id, BrandDTO brandDTO) {
         // Verify brand exists
         brandRepository.findBrandById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
         
-        Brand brand = convertToEntity(brandDTO);
-        Brand updatedBrand = brandRepository.updateBrand(id, brand);
-        return convertToDTO(updatedBrand);
+        // Check if brand with same name already exists (except for the current brand)
+        brandRepository.findBrandsByNameContaining(brandDTO.getName()).stream()
+                .filter(b -> b.getName().equalsIgnoreCase(brandDTO.getName()) && !b.getId().equals(id))
+                .findFirst()
+                .ifPresent(brand -> {
+                    throw new DuplicateResourceException("Brand", "name", brandDTO.getName());
+                });
+        
+        try {
+            Brand brand = convertToEntity(brandDTO);
+            Brand updatedBrand = brandRepository.updateBrand(id, brand);
+            return convertToDTO(updatedBrand);
+        } catch (DataIntegrityViolationException e) {
+            // This will catch any database constraint violations
+            if (e.getMessage().contains("unique") || (e.getRootCause() != null && 
+                    e.getRootCause().getMessage().contains("unique"))) {
+                throw new DuplicateResourceException("Brand with the same name already exists");
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -75,9 +111,13 @@ public class BrandServiceImpl implements BrandService {
     public void deleteBrand(Long id) {
         // Verify brand exists
         brandRepository.findBrandById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
         
-        brandRepository.deleteBrand(id);
+        try {
+            brandRepository.deleteBrand(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Cannot delete brand as it is referenced by other records");
+        }
     }
 
     private BrandDTO convertToDTO(Brand brand) {
