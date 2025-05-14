@@ -1,5 +1,6 @@
 package com.shop.buy.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SaleItemDTO {
     
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     
     @NotNull(message = "Sale ID is required")

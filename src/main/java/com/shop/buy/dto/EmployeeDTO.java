@@ -1,5 +1,6 @@
 package com.shop.buy.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class EmployeeDTO {
     
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     
     @NotBlank(message = "Employee name cannot be blank")

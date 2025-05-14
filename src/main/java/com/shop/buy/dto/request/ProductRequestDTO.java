@@ -1,6 +1,5 @@
-package com.shop.buy.dto;
+package com.shop.buy.dto.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,10 +12,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
-    
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
+public class ProductRequestDTO {
     
     @NotBlank(message = "Product name cannot be blank")
     private String name;

@@ -1,5 +1,6 @@
 package com.shop.buy.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SaleDTO {
     
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
     
     @NotNull(message = "Customer ID is required")
