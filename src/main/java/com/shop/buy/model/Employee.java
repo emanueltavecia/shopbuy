@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "employees")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "employees")
 public class Employee {
     
     @Id
@@ -21,12 +21,12 @@ public class Employee {
     @Column(nullable = false)
     private String name;
     
-    @Column(nullable = false)
+    @Column
     private String role;
     
-    @Column(nullable = false, unique = true)
+    @Column
     private String email;
     
-    @Column(name = "hire_date", nullable = false)
+    @Column(name = "hire_date")
     private LocalDate hireDate;
 }

@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "sales")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sales")
 public class Sale {
     
     @Id
@@ -28,9 +27,9 @@ public class Sale {
     @Column(name = "sale_date", nullable = false)
     private LocalDateTime saleDate;
     
-    @Column(name = "total_value", nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_value", nullable = false)
     private BigDecimal totalValue;
     
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SaleItem> items = new ArrayList<>();
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    private List<SaleItem> items;
 }

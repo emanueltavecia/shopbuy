@@ -1,15 +1,15 @@
 package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.EmployeeDTO;
-import com.shop.buy.exception.ResourceAlreadyExistsException;
-import com.shop.buy.exception.ResourceNotFoundException;
 import com.shop.buy.model.Employee;
 import com.shop.buy.repository.EmployeeRepository;
 import com.shop.buy.service.EmployeeService;
-import org.springframework.beans.BeanUtils;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,82 +18,100 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    @Autowired
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
     @Override
-    public List<EmployeeDTO> findAll() {
-        return employeeRepository.findAll().stream()
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeRepository.findAllEmployees().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public EmployeeDTO findById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
+    public EmployeeDTO getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findEmployeeById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
         return convertToDTO(employee);
     }
 
     @Override
-    public EmployeeDTO findByEmail(String email) {
-        Employee employee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with email: " + email));
+    public List<EmployeeDTO> getEmployeesByName(String name) {
+        return employeeRepository.findEmployeesByNameContaining(name).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployeesByRole(String role) {
+        return employeeRepository.findEmployeesByRole(role).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeByEmail(String email) {
+        Employee employee = employeeRepository.findEmployeeByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with email: " + email));
         return convertToDTO(employee);
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployeesByHireDateRange(LocalDate startDate, LocalDate endDate) {
+        return employeeRepository.findEmployeesByHireDateRange(startDate, endDate).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public EmployeeDTO create(EmployeeDTO employeeDTO) {
-        if (employeeRepository.existsByEmail(employeeDTO.getEmail())) {
-            throw new ResourceAlreadyExistsException("Employee already exists with email: " + employeeDTO.getEmail());
-        }
+    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = convertToEntity(employeeDTO);
+        Employee savedEmployee = employeeRepository.saveEmployee(employee);
+        return convertToDTO(savedEmployee);
+    }
+
+    @Override
+    @Transactional
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
+        // Verify employee exists
+        employeeRepository.findEmployeeById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
         
         Employee employee = convertToEntity(employeeDTO);
-        employee = employeeRepository.save(employee);
-        return convertToDTO(employee);
+        Employee updatedEmployee = employeeRepository.updateEmployee(id, employee);
+        return convertToDTO(updatedEmployee);
     }
 
     @Override
     @Transactional
-    public EmployeeDTO update(Long id, EmployeeDTO employeeDTO) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
+    public void deleteEmployee(Long id) {
+        // Verify employee exists
+        employeeRepository.findEmployeeById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
         
-        // Check if email is being changed and if the new email already exists
-        if (!existingEmployee.getEmail().equals(employeeDTO.getEmail()) &&
-                employeeRepository.existsByEmail(employeeDTO.getEmail())) {
-            throw new ResourceAlreadyExistsException("Employee already exists with email: " + employeeDTO.getEmail());
-        }
-        
-        existingEmployee.setName(employeeDTO.getName());
-        existingEmployee.setRole(employeeDTO.getRole());
-        existingEmployee.setEmail(employeeDTO.getEmail());
-        existingEmployee.setHireDate(employeeDTO.getHireDate());
-        
-        existingEmployee = employeeRepository.save(existingEmployee);
-        return convertToDTO(existingEmployee);
+        employeeRepository.deleteEmployee(id);
     }
 
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        if (!employeeRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Employee not found with id: " + id);
-        }
-        employeeRepository.deleteById(id);
-    }
-    
     private EmployeeDTO convertToDTO(Employee employee) {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee, employeeDTO);
-        return employeeDTO;
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setId(employee.getId());
+        dto.setName(employee.getName());
+        dto.setRole(employee.getRole());
+        dto.setEmail(employee.getEmail());
+        dto.setHireDate(employee.getHireDate());
+        return dto;
     }
-    
-    private Employee convertToEntity(EmployeeDTO employeeDTO) {
+
+    private Employee convertToEntity(EmployeeDTO dto) {
         Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO, employee);
+        employee.setId(dto.getId());
+        employee.setName(dto.getName());
+        employee.setRole(dto.getRole());
+        employee.setEmail(dto.getEmail());
+        employee.setHireDate(dto.getHireDate());
         return employee;
     }
 }

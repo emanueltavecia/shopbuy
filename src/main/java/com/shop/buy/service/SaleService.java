@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SaleService {
-    List<SaleDTO> findAll();
-    SaleDTO findById(Long id);
-    List<SaleDTO> findByCustomerId(Long customerId);
-    List<SaleDTO> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
-    SaleDTO create(SaleDTO saleDTO);
-    SaleDTO update(Long id, SaleDTO saleDTO);
-    void delete(Long id);
+    List<SaleDTO> getAllSales();
+    SaleDTO getSaleById(Long id);
+    List<SaleDTO> getSalesByCustomerId(Long customerId);
+    List<SaleDTO> getSalesByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    SaleDTO createSale(SaleDTO saleDTO);
+    SaleDTO updateSale(Long id, SaleDTO saleDTO);
+    void deleteSale(Long id);
 }

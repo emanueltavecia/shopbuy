@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "sale_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "sale_items")
 public class SaleItem {
     
     @Id
@@ -29,6 +29,6 @@ public class SaleItem {
     @Column(nullable = false)
     private Integer quantity;
     
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
 }

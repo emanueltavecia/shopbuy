@@ -1,15 +1,15 @@
 package com.shop.buy.service;
 
 import com.shop.buy.dto.SupplierDTO;
-
 import java.util.List;
 
 public interface SupplierService {
-    List<SupplierDTO> findAll();
-    SupplierDTO findById(Long id);
-    SupplierDTO findByCnpj(String cnpj);
-    SupplierDTO findByEmail(String email);
-    SupplierDTO create(SupplierDTO supplierDTO);
-    SupplierDTO update(Long id, SupplierDTO supplierDTO);
-    void delete(Long id);
+    List<SupplierDTO> getAllSuppliers();
+    SupplierDTO getSupplierById(Long id);
+    List<SupplierDTO> getSuppliersByName(String name);
+    SupplierDTO getSupplierByCnpj(String cnpj);
+    SupplierDTO getSupplierByEmail(String email);
+    SupplierDTO createSupplier(SupplierDTO supplierDTO);
+    SupplierDTO updateSupplier(Long id, SupplierDTO supplierDTO);
+    void deleteSupplier(Long id);
 }

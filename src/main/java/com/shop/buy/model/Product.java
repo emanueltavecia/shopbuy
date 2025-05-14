@@ -6,14 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
+@Entity
+@Table(name = "products")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "products")
 public class Product {
     
     @Id
@@ -23,21 +21,20 @@ public class Product {
     @Column(nullable = false)
     private String name;
     
+    @Column
     private String size;
     
+    @Column
     private String color;
     
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private BigDecimal price;
     
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     
     @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
-    
-    @OneToMany(mappedBy = "product")
-    private List<SaleItem> saleItems = new ArrayList<>();
 }

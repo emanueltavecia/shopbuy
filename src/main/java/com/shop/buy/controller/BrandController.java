@@ -1,11 +1,9 @@
 package com.shop.buy.controller;
 
-import com.shop.buy.dto.ApiResponse;
 import com.shop.buy.dto.BrandDTO;
 import com.shop.buy.service.BrandService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,47 +12,50 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/brands")
-@Tag(name = "Brand", description = "Brand management endpoints")
 public class BrandController {
 
     private final BrandService brandService;
 
+    @Autowired
     public BrandController(BrandService brandService) {
         this.brandService = brandService;
     }
 
     @GetMapping
-    @Operation(summary = "Get all brands", description = "Retrieves a list of all brands")
-    public ResponseEntity<ApiResponse<List<BrandDTO>>> getAllBrands() {
-        List<BrandDTO> brands = brandService.findAll();
-        return ResponseEntity.ok(ApiResponse.success(brands));
+    public ResponseEntity<List<BrandDTO>> getAllBrands() {
+        return ResponseEntity.ok(brandService.getAllBrands());
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get brand by ID", description = "Retrieves a brand by its ID")
-    public ResponseEntity<ApiResponse<BrandDTO>> getBrandById(@PathVariable Long id) {
-        BrandDTO brand = brandService.findById(id);
-        return ResponseEntity.ok(ApiResponse.success(brand));
+    public ResponseEntity<BrandDTO> getBrandById(@PathVariable Long id) {
+        return ResponseEntity.ok(brandService.getBrandById(id));
+    }
+
+    @GetMapping("/search/name")
+    public ResponseEntity<List<BrandDTO>> getBrandsByName(@RequestParam String name) {
+        return ResponseEntity.ok(brandService.getBrandsByName(name));
+    }
+
+    @GetMapping("/search/country")
+    public ResponseEntity<List<BrandDTO>> getBrandsByCountry(@RequestParam String country) {
+        return ResponseEntity.ok(brandService.getBrandsByCountry(country));
     }
 
     @PostMapping
-    @Operation(summary = "Create a new brand", description = "Creates a new brand")
-    public ResponseEntity<ApiResponse<BrandDTO>> createBrand(@Valid @RequestBody BrandDTO brandDTO) {
-        BrandDTO createdBrand = brandService.create(brandDTO);
-        return new ResponseEntity<>(ApiResponse.success("Brand created successfully", createdBrand), HttpStatus.CREATED);
+    public ResponseEntity<BrandDTO> createBrand(@Valid @RequestBody BrandDTO brandDTO) {
+        return new ResponseEntity<>(brandService.createBrand(brandDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update a brand", description = "Updates an existing brand")
-    public ResponseEntity<ApiResponse<BrandDTO>> updateBrand(@PathVariable Long id, @Valid @RequestBody BrandDTO brandDTO) {
-        BrandDTO updatedBrand = brandService.update(id, brandDTO);
-        return ResponseEntity.ok(ApiResponse.success("Brand updated successfully", updatedBrand));
+    public ResponseEntity<BrandDTO> updateBrand(
+            @PathVariable Long id,
+            @Valid @RequestBody BrandDTO brandDTO) {
+        return ResponseEntity.ok(brandService.updateBrand(id, brandDTO));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete a brand", description = "Deletes a brand by its ID")
-    public ResponseEntity<ApiResponse<Void>> deleteBrand(@PathVariable Long id) {
-        brandService.delete(id);
-        return ResponseEntity.ok(ApiResponse.success("Brand deleted successfully", null));
+    public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
+        brandService.deleteBrand(id);
+        return ResponseEntity.noContent().build();
     }
 }

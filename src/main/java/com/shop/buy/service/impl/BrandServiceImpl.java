@@ -1,12 +1,11 @@
 package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.BrandDTO;
-import com.shop.buy.exception.ResourceAlreadyExistsException;
-import com.shop.buy.exception.ResourceNotFoundException;
 import com.shop.buy.model.Brand;
 import com.shop.buy.repository.BrandRepository;
 import com.shop.buy.service.BrandService;
-import org.springframework.beans.BeanUtils;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,74 +17,84 @@ public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
 
+    @Autowired
     public BrandServiceImpl(BrandRepository brandRepository) {
         this.brandRepository = brandRepository;
     }
 
     @Override
-    public List<BrandDTO> findAll() {
-        return brandRepository.findAll().stream()
+    public List<BrandDTO> getAllBrands() {
+        return brandRepository.findAllBrands().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public BrandDTO findById(Long id) {
-        Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + id));
+    public BrandDTO getBrandById(Long id) {
+        Brand brand = brandRepository.findBrandById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
         return convertToDTO(brand);
     }
 
     @Override
+    public List<BrandDTO> getBrandsByName(String name) {
+        return brandRepository.findBrandsByNameContaining(name).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BrandDTO> getBrandsByCountry(String country) {
+        return brandRepository.findBrandsByCountry(country).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
-    public BrandDTO create(BrandDTO brandDTO) {
-        if (brandRepository.existsByName(brandDTO.getName())) {
-            throw new ResourceAlreadyExistsException("Brand already exists with name: " + brandDTO.getName());
-        }
+    public BrandDTO createBrand(BrandDTO brandDTO) {
+        Brand brand = convertToEntity(brandDTO);
+        Brand savedBrand = brandRepository.saveBrand(brand);
+        return convertToDTO(savedBrand);
+    }
+
+    @Override
+    @Transactional
+    public BrandDTO updateBrand(Long id, BrandDTO brandDTO) {
+        // Verify brand exists
+        brandRepository.findBrandById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
         
         Brand brand = convertToEntity(brandDTO);
-        brand = brandRepository.save(brand);
-        return convertToDTO(brand);
+        Brand updatedBrand = brandRepository.updateBrand(id, brand);
+        return convertToDTO(updatedBrand);
     }
 
     @Override
     @Transactional
-    public BrandDTO update(Long id, BrandDTO brandDTO) {
-        Brand existingBrand = brandRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + id));
+    public void deleteBrand(Long id) {
+        // Verify brand exists
+        brandRepository.findBrandById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Brand not found with id: " + id));
         
-        // Check if name is being changed and if the new name already exists
-        if (!existingBrand.getName().equals(brandDTO.getName()) &&
-                brandRepository.existsByName(brandDTO.getName())) {
-            throw new ResourceAlreadyExistsException("Brand already exists with name: " + brandDTO.getName());
-        }
-        
-        existingBrand.setName(brandDTO.getName());
-        existingBrand.setCountry(brandDTO.getCountry());
-        existingBrand.setDescription(brandDTO.getDescription());
-        
-        existingBrand = brandRepository.save(existingBrand);
-        return convertToDTO(existingBrand);
+        brandRepository.deleteBrand(id);
     }
 
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        if (!brandRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Brand not found with id: " + id);
-        }
-        brandRepository.deleteById(id);
-    }
-    
     private BrandDTO convertToDTO(Brand brand) {
-        BrandDTO brandDTO = new BrandDTO();
-        BeanUtils.copyProperties(brand, brandDTO);
-        return brandDTO;
+        BrandDTO dto = new BrandDTO();
+        dto.setId(brand.getId());
+        dto.setName(brand.getName());
+        dto.setCountry(brand.getCountry());
+        dto.setDescription(brand.getDescription());
+        return dto;
     }
-    
-    private Brand convertToEntity(BrandDTO brandDTO) {
+
+    private Brand convertToEntity(BrandDTO dto) {
         Brand brand = new Brand();
-        BeanUtils.copyProperties(brandDTO, brand);
+        brand.setId(dto.getId());
+        brand.setName(dto.getName());
+        brand.setCountry(dto.getCountry());
+        brand.setDescription(dto.getDescription());
         return brand;
     }
 }
