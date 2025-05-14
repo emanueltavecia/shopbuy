@@ -1,16 +1,14 @@
 package com.shop.buy.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,11 +20,11 @@ public class SaleDTO {
     @NotNull(message = "Customer ID is required")
     private Long customerId;
     
+    @NotNull(message = "Sale date is required")
+    @PastOrPresent(message = "Sale date cannot be in the future")
     private LocalDateTime saleDate;
     
+    @NotNull(message = "Total value is required")
+    @Positive(message = "Total value must be positive")
     private BigDecimal totalValue;
-    
-    @NotEmpty(message = "Sale must have at least one item")
-    @Valid
-    private List<SaleItemDTO> items = new ArrayList<>();
 }

@@ -1,5 +1,8 @@
 package com.shop.buy.config;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +73,7 @@ public class DataLoader {
             product1.setName("Sport T-Shirt");
             product1.setSize("M");
             product1.setColor("Blue");
-            product1.setPrice(new java.math.BigDecimal("29.99"));
+            product1.setPrice(new BigDecimal("29.99"));
             product1.setCategory(shirts);
             product1.setBrand(nike);
             productRepository.save(product1);
@@ -79,7 +82,7 @@ public class DataLoader {
             product2.setName("Running Shoes");
             product2.setSize("42");
             product2.setColor("Black");
-            product2.setPrice(new java.math.BigDecimal("89.99"));
+            product2.setPrice(new BigDecimal("89.99"));
             product2.setCategory(shoes);
             product2.setBrand(adidas);
             productRepository.save(product2);
@@ -88,7 +91,7 @@ public class DataLoader {
             product3.setName("Jeans 501");
             product3.setSize("32");
             product3.setColor("Blue");
-            product3.setPrice(new java.math.BigDecimal("79.99"));
+            product3.setPrice(new BigDecimal("79.99"));
             product3.setCategory(pants);
             product3.setBrand(levis);
             productRepository.save(product3);
@@ -96,76 +99,94 @@ public class DataLoader {
             // Load customers
             Customer customer1 = new Customer();
             customer1.setName("John Doe");
-            customer1.setCpf("12345678901");
+            customer1.setCpf("123.456.789-01");
             customer1.setPhone("(11) 98765-4321");
             customer1.setEmail("john.doe@example.com");
             customerRepository.save(customer1);
             
             Customer customer2 = new Customer();
             customer2.setName("Jane Smith");
-            customer2.setCpf("98765432109");
+            customer2.setCpf("987.654.321-09");
             customer2.setPhone("(11) 91234-5678");
             customer2.setEmail("jane.smith@example.com");
             customerRepository.save(customer2);
-    
+            
             // Load employees
             Employee employee1 = new Employee();
             employee1.setName("Robert Johnson");
             employee1.setRole("Manager");
             employee1.setEmail("robert.johnson@clothing.com");
-            employee1.setHireDate(java.time.LocalDate.of(2020, 1, 15));
+            employee1.setHireDate(LocalDate.of(2020, 1, 15));
             employeeRepository.save(employee1);
             
             Employee employee2 = new Employee();
             employee2.setName("Sarah Williams");
             employee2.setRole("Sales Associate");
             employee2.setEmail("sarah.williams@clothing.com");
-            employee2.setHireDate(java.time.LocalDate.of(2021, 3, 10));
+            employee2.setHireDate(LocalDate.of(2021, 3, 10));
             employeeRepository.save(employee2);
     
             // Load suppliers
             Supplier supplier1 = new Supplier();
             supplier1.setName("Fabric World");
-            supplier1.setCnpj("12345678901234");
+            supplier1.setCnpj("12.345.678/0001-90");
             supplier1.setPhone("(11) 3333-4444");
             supplier1.setEmail("contact@fabricworld.com");
             supplierRepository.save(supplier1);
             
             Supplier supplier2 = new Supplier();
             supplier2.setName("Textile Solutions");
-            supplier2.setCnpj("56789012345678");
+            supplier2.setCnpj("98.765.432/0001-10");
             supplier2.setPhone("(11) 5555-6666");
             supplier2.setEmail("info@textilesolutions.com");
             supplierRepository.save(supplier2);
     
-            // Create a sale
+            // Create sales
             Sale sale1 = new Sale();
             sale1.setCustomer(customer1);
-            sale1.setSaleDate(java.time.LocalDateTime.now());
-            sale1.setTotalValue(new java.math.BigDecimal("119.98"));
+            sale1.setSaleDate(LocalDateTime.now().minusDays(5));
+            sale1.setTotalValue(new BigDecimal("119.98"));
             saleRepository.save(sale1);
             
-            // Add sale items
-            SaleItem item1 = new SaleItem();
-            item1.setSale(sale1);
-            item1.setProduct(product1);
-            item1.setQuantity(1);
-            item1.setUnitPrice(product1.getPrice());
-            saleItemRepository.save(item1);
+            Sale sale2 = new Sale();
+            sale2.setCustomer(customer2);
+            sale2.setSaleDate(LocalDateTime.now().minusDays(2));
+            sale2.setTotalValue(new BigDecimal("79.99"));
+            saleRepository.save(sale2);
             
-            SaleItem item2 = new SaleItem();
-            item2.setSale(sale1);
-            item2.setProduct(product2);
-            item2.setQuantity(1);
-            item2.setUnitPrice(product2.getPrice());
-            saleItemRepository.save(item2);
+            // Create sale items
+            SaleItem saleItem1 = new SaleItem();
+            saleItem1.setSale(sale1);
+            saleItem1.setProduct(product1);
+            saleItem1.setQuantity(1);
+            saleItem1.setUnitPrice(product1.getPrice());
+            saleItemRepository.save(saleItem1);
+            
+            SaleItem saleItem2 = new SaleItem();
+            saleItem2.setSale(sale1);
+            saleItem2.setProduct(product2);
+            saleItem2.setQuantity(1);
+            saleItem2.setUnitPrice(product2.getPrice());
+            saleItemRepository.save(saleItem2);
+            
+            SaleItem saleItem3 = new SaleItem();
+            saleItem3.setSale(sale2);
+            saleItem3.setProduct(product3);
+            saleItem3.setQuantity(1);
+            saleItem3.setUnitPrice(product3.getPrice());
+            saleItemRepository.save(saleItem3);
             
             // Update sale with items
-            List<SaleItem> items = new ArrayList<>();
-            items.add(item1);
-            items.add(item2);
-            sale1.setItems(items);
+            List<SaleItem> items1 = new ArrayList<>();
+            items1.add(saleItem1);
+            items1.add(saleItem2);
+            sale1.setItems(items1);
             saleRepository.save(sale1);
+            
+            List<SaleItem> items2 = new ArrayList<>();
+            items2.add(saleItem3);
+            sale2.setItems(items2);
+            saleRepository.save(sale2);
             
             System.out.println("Sample data has been loaded into the database successfully!");
         };

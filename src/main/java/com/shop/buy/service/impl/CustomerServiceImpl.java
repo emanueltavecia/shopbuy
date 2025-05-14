@@ -1,12 +1,11 @@
 package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.CustomerDTO;
-import com.shop.buy.exception.ResourceAlreadyExistsException;
-import com.shop.buy.exception.ResourceNotFoundException;
 import com.shop.buy.model.Customer;
 import com.shop.buy.repository.CustomerRepository;
 import com.shop.buy.service.CustomerService;
-import org.springframework.beans.BeanUtils;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,99 +17,93 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    @Autowired
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
     @Override
-    public List<CustomerDTO> findAll() {
-        return customerRepository.findAll().stream()
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAllCustomers().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CustomerDTO findById(Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
+    public CustomerDTO getCustomerById(Long id) {
+        Customer customer = customerRepository.findCustomerById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
         return convertToDTO(customer);
     }
 
     @Override
-    public CustomerDTO findByCpf(String cpf) {
-        Customer customer = customerRepository.findByCpf(cpf)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with CPF: " + cpf));
+    public List<CustomerDTO> getCustomersByName(String name) {
+        return customerRepository.findCustomersByNameContaining(name).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CustomerDTO getCustomerByCpf(String cpf) {
+        Customer customer = customerRepository.findCustomerByCpf(cpf)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with CPF: " + cpf));
         return convertToDTO(customer);
     }
 
     @Override
-    public CustomerDTO findByEmail(String email) {
-        Customer customer = customerRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with email: " + email));
+    public CustomerDTO getCustomerByEmail(String email) {
+        Customer customer = customerRepository.findCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with email: " + email));
         return convertToDTO(customer);
     }
 
     @Override
     @Transactional
-    public CustomerDTO create(CustomerDTO customerDTO) {
-        if (customerRepository.existsByCpf(customerDTO.getCpf())) {
-            throw new ResourceAlreadyExistsException("Customer already exists with CPF: " + customerDTO.getCpf());
-        }
-        
-        if (customerRepository.existsByEmail(customerDTO.getEmail())) {
-            throw new ResourceAlreadyExistsException("Customer already exists with email: " + customerDTO.getEmail());
-        }
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
+        Customer customer = convertToEntity(customerDTO);
+        Customer savedCustomer = customerRepository.saveCustomer(customer);
+        return convertToDTO(savedCustomer);
+    }
+
+    @Override
+    @Transactional
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+        // Verify customer exists
+        customerRepository.findCustomerById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
         
         Customer customer = convertToEntity(customerDTO);
-        customer = customerRepository.save(customer);
-        return convertToDTO(customer);
+        Customer updatedCustomer = customerRepository.updateCustomer(id, customer);
+        return convertToDTO(updatedCustomer);
     }
 
     @Override
     @Transactional
-    public CustomerDTO update(Long id, CustomerDTO customerDTO) {
-        Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
+    public void deleteCustomer(Long id) {
+        // Verify customer exists
+        customerRepository.findCustomerById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
         
-        // Check if CPF is being changed and if the new CPF already exists
-        if (!existingCustomer.getCpf().equals(customerDTO.getCpf()) &&
-                customerRepository.existsByCpf(customerDTO.getCpf())) {
-            throw new ResourceAlreadyExistsException("Customer already exists with CPF: " + customerDTO.getCpf());
-        }
-        
-        // Check if email is being changed and if the new email already exists
-        if (!existingCustomer.getEmail().equals(customerDTO.getEmail()) &&
-                customerRepository.existsByEmail(customerDTO.getEmail())) {
-            throw new ResourceAlreadyExistsException("Customer already exists with email: " + customerDTO.getEmail());
-        }
-        
-        existingCustomer.setName(customerDTO.getName());
-        existingCustomer.setCpf(customerDTO.getCpf());
-        existingCustomer.setPhone(customerDTO.getPhone());
-        existingCustomer.setEmail(customerDTO.getEmail());
-        
-        existingCustomer = customerRepository.save(existingCustomer);
-        return convertToDTO(existingCustomer);
+        customerRepository.deleteCustomer(id);
     }
 
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        if (!customerRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Customer not found with id: " + id);
-        }
-        customerRepository.deleteById(id);
-    }
-    
     private CustomerDTO convertToDTO(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
-        return customerDTO;
+        CustomerDTO dto = new CustomerDTO();
+        dto.setId(customer.getId());
+        dto.setName(customer.getName());
+        dto.setCpf(customer.getCpf());
+        dto.setPhone(customer.getPhone());
+        dto.setEmail(customer.getEmail());
+        return dto;
     }
-    
-    private Customer convertToEntity(CustomerDTO customerDTO) {
+
+    private Customer convertToEntity(CustomerDTO dto) {
         Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
+        customer.setId(dto.getId());
+        customer.setName(dto.getName());
+        customer.setCpf(dto.getCpf());
+        customer.setPhone(dto.getPhone());
+        customer.setEmail(dto.getEmail());
         return customer;
     }
 }

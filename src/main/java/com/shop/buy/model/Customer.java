@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Entity
+@Table(name = "customers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "customers")
 public class Customer {
     
     @Id
@@ -22,14 +19,12 @@ public class Customer {
     @Column(nullable = false)
     private String name;
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String cpf;
     
+    @Column
     private String phone;
     
-    @Column(nullable = false)
+    @Column
     private String email;
-    
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Sale> sales = new ArrayList<>();
 }

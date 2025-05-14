@@ -5,11 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "suppliers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "suppliers")
 public class Supplier {
     
     @Id
@@ -19,11 +19,12 @@ public class Supplier {
     @Column(nullable = false)
     private String name;
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String cnpj;
     
+    @Column
     private String phone;
     
-    @Column(nullable = false)
+    @Column
     private String email;
 }

@@ -3,7 +3,6 @@ package com.shop.buy.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,18 +14,15 @@ public class CustomerDTO {
     
     private Long id;
     
-    @NotBlank(message = "Name is required")
-    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @NotBlank(message = "Customer name cannot be blank")
     private String name;
     
-    @NotBlank(message = "CPF is required")
-    @Pattern(regexp = "^\\d{11}$", message = "CPF must contain 11 digits")
+    @NotBlank(message = "CPF cannot be blank")
+    @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$", message = "CPF must be in the format XXX.XXX.XXX-XX")
     private String cpf;
     
-    @Size(max = 20, message = "Phone cannot exceed 20 characters")
     private String phone;
     
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
+    @Email(message = "Email should be valid")
     private String email;
 }

@@ -16,6 +16,7 @@ public class SaleItemDTO {
     
     private Long id;
     
+    @NotNull(message = "Sale ID is required")
     private Long saleId;
     
     @NotNull(message = "Product ID is required")
@@ -26,6 +27,6 @@ public class SaleItemDTO {
     private Integer quantity;
     
     @NotNull(message = "Unit price is required")
-    @Positive(message = "Unit price must be greater than zero")
+    @Positive(message = "Unit price must be positive")
     private BigDecimal unitPrice;
 }

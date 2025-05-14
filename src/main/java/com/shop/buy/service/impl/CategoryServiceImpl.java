@@ -1,12 +1,11 @@
 package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.CategoryDTO;
-import com.shop.buy.exception.ResourceAlreadyExistsException;
-import com.shop.buy.exception.ResourceNotFoundException;
 import com.shop.buy.model.Category;
 import com.shop.buy.repository.CategoryRepository;
 import com.shop.buy.service.CategoryService;
-import org.springframework.beans.BeanUtils;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,73 +17,75 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public List<CategoryDTO> findAll() {
-        return categoryRepository.findAll().stream()
+    public List<CategoryDTO> getAllCategories() {
+        return categoryRepository.findAllCategories().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CategoryDTO findById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+    public CategoryDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findCategoryById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         return convertToDTO(category);
     }
 
     @Override
+    public List<CategoryDTO> getCategoriesByName(String name) {
+        return categoryRepository.findCategoriesByNameContaining(name).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
-    public CategoryDTO create(CategoryDTO categoryDTO) {
-        if (categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new ResourceAlreadyExistsException("Category already exists with name: " + categoryDTO.getName());
-        }
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = convertToEntity(categoryDTO);
+        Category savedCategory = categoryRepository.saveCategory(category);
+        return convertToDTO(savedCategory);
+    }
+
+    @Override
+    @Transactional
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
+        // Verify category exists
+        categoryRepository.findCategoryById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         
         Category category = convertToEntity(categoryDTO);
-        category = categoryRepository.save(category);
-        return convertToDTO(category);
+        Category updatedCategory = categoryRepository.updateCategory(id, category);
+        return convertToDTO(updatedCategory);
     }
 
     @Override
     @Transactional
-    public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+    public void deleteCategory(Long id) {
+        // Verify category exists
+        categoryRepository.findCategoryById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         
-        // Check if name is being changed and if the new name already exists
-        if (!existingCategory.getName().equals(categoryDTO.getName()) &&
-                categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new ResourceAlreadyExistsException("Category already exists with name: " + categoryDTO.getName());
-        }
-        
-        existingCategory.setName(categoryDTO.getName());
-        existingCategory.setDescription(categoryDTO.getDescription());
-        
-        existingCategory = categoryRepository.save(existingCategory);
-        return convertToDTO(existingCategory);
+        categoryRepository.deleteCategory(id);
     }
 
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Category not found with id: " + id);
-        }
-        categoryRepository.deleteById(id);
-    }
-    
     private CategoryDTO convertToDTO(Category category) {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        BeanUtils.copyProperties(category, categoryDTO);
-        return categoryDTO;
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(category.getId());
+        dto.setName(category.getName());
+        dto.setDescription(category.getDescription());
+        return dto;
     }
-    
-    private Category convertToEntity(CategoryDTO categoryDTO) {
+
+    private Category convertToEntity(CategoryDTO dto) {
         Category category = new Category();
-        BeanUtils.copyProperties(categoryDTO, category);
+        category.setId(dto.getId());
+        category.setName(dto.getName());
+        category.setDescription(dto.getDescription());
         return category;
     }
 }
