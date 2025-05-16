@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,34 +34,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepository.findEmployeeById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
         return convertToDTO(employee);
-    }
-
-    @Override
-    public List<EmployeeDTO> getEmployeesByName(String name) {
-        return employeeRepository.findEmployeesByNameContaining(name).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EmployeeDTO> getEmployeesByRole(String role) {
-        return employeeRepository.findEmployeesByRole(role).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public EmployeeDTO getEmployeeByEmail(String email) {
-        Employee employee = employeeRepository.findEmployeeByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with email: " + email));
-        return convertToDTO(employee);
-    }
-
-    @Override
-    public List<EmployeeDTO> getEmployeesByHireDateRange(LocalDate startDate, LocalDate endDate) {
-        return employeeRepository.findEmployeesByHireDateRange(startDate, endDate).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
     }
 
     @Override

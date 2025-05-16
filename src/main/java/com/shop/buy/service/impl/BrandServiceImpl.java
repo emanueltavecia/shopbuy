@@ -46,13 +46,6 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<BrandDTO> getBrandsByCountry(String country) {
-        return brandRepository.findBrandsByCountry(country).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     @Transactional
     public BrandDTO createBrand(BrandDTO brandDTO) {
         // Check if brand with same name already exists

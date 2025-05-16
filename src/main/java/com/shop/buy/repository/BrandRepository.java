@@ -21,9 +21,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     @Query(value = "SELECT * FROM brands WHERE name LIKE %:name%", nativeQuery = true)
     List<Brand> findBrandsByNameContaining(@Param("name") String name);
     
-    @Query(value = "SELECT * FROM brands WHERE country = :country", nativeQuery = true)
-    List<Brand> findBrandsByCountry(@Param("country") String country);
-    
     @Query(value = "INSERT INTO brands (name, country, description) VALUES (:#{#brand.name}, :#{#brand.country}, :#{#brand.description}) RETURNING *", nativeQuery = true)
     Brand saveBrand(@Param("brand") Brand brand);
     

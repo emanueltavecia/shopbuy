@@ -36,26 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
         return convertToDTO(customer);
     }
 
-    @Override
-    public List<CustomerDTO> getCustomersByName(String name) {
-        return customerRepository.findCustomersByNameContaining(name).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
 
-    @Override
-    public CustomerDTO getCustomerByCpf(String cpf) {
-        Customer customer = customerRepository.findCustomerByCpf(cpf)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with CPF: " + cpf));
-        return convertToDTO(customer);
-    }
-
-    @Override
-    public CustomerDTO getCustomerByEmail(String email) {
-        Customer customer = customerRepository.findCustomerByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with email: " + email));
-        return convertToDTO(customer);
-    }
 
     @Override
     @Transactional

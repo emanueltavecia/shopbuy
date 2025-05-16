@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,17 +18,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products WHERE id = :id", nativeQuery = true)
     Optional<Product> findProductById(@Param("id") Long id);
     
-    @Query(value = "SELECT * FROM products WHERE name LIKE %:name%", nativeQuery = true)
-    List<Product> findProductsByNameContaining(@Param("name") String name);
-    
     @Query(value = "SELECT * FROM products WHERE category_id = :categoryId", nativeQuery = true)
     List<Product> findProductsByCategoryId(@Param("categoryId") Long categoryId);
     
     @Query(value = "SELECT * FROM products WHERE brand_id = :brandId", nativeQuery = true)
     List<Product> findProductsByBrandId(@Param("brandId") Long brandId);
-    
-    @Query(value = "SELECT * FROM products WHERE price BETWEEN :minPrice AND :maxPrice", nativeQuery = true)
-    List<Product> findProductsByPriceRange(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice") BigDecimal maxPrice);
     
     @Query(value = "INSERT INTO products (name, size, color, price, category_id, brand_id) VALUES (:#{#product.name}, :#{#product.size}, :#{#product.color}, :#{#product.price}, :#{#product.category.id}, :#{#product.brand.id}) RETURNING *", nativeQuery = true)
     Product saveProduct(@Param("product") Product product);
