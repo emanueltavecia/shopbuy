@@ -18,9 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "SELECT * FROM categories WHERE id = :id", nativeQuery = true)
     Optional<Category> findCategoryById(@Param("id") Long id);
     
-    @Query(value = "SELECT * FROM categories WHERE name LIKE %:name%", nativeQuery = true)
-    List<Category> findCategoriesByNameContaining(@Param("name") String name);
-    
     @Query(value = "INSERT INTO categories (name, description) VALUES (:#{#category.name}, :#{#category.description}) RETURNING *", nativeQuery = true)
     Category saveCategory(@Param("category") Category category);
     

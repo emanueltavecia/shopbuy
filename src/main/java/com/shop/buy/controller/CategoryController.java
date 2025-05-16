@@ -79,28 +79,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-    @Operation(
-        summary = "Search categories by name",
-        description = "Retrieves all categories that contain the specified name string",
-        tags = {"Categories"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved matching categories",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = CategoryDTO.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search")
-    public ResponseEntity<List<CategoryDTO>> getCategoriesByName(
-            @Parameter(description = "Name or partial name to search for", required = true)
-            @RequestParam String name) {
-        return ResponseEntity.ok(categoryService.getCategoriesByName(name));
-    }
+
 
     @Operation(
         summary = "Create a new category",

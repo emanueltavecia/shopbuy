@@ -37,13 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> getCategoriesByName(String name) {
-        return categoryRepository.findCategoriesByNameContaining(name).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     @Transactional
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = convertToEntity(categoryDTO);

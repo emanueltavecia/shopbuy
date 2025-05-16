@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +20,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     
     @Query(value = "SELECT * FROM sales WHERE customer_id = :customerId", nativeQuery = true)
     List<Sale> findSalesByCustomerId(@Param("customerId") Long customerId);
-    
-    @Query(value = "SELECT * FROM sales WHERE sale_date BETWEEN :startDate AND :endDate", nativeQuery = true)
-    List<Sale> findSalesByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
     
     @Query(value = "INSERT INTO sales (customer_id, sale_date, total_value) VALUES (:#{#sale.customer.id}, :#{#sale.saleDate}, :#{#sale.totalValue}) RETURNING *", nativeQuery = true)
     Sale saveSale(@Param("sale") Sale sale);

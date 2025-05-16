@@ -18,15 +18,6 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query(value = "SELECT * FROM suppliers WHERE id = :id", nativeQuery = true)
     Optional<Supplier> findSupplierById(@Param("id") Long id);
     
-    @Query(value = "SELECT * FROM suppliers WHERE name LIKE %:name%", nativeQuery = true)
-    List<Supplier> findSuppliersByNameContaining(@Param("name") String name);
-    
-    @Query(value = "SELECT * FROM suppliers WHERE cnpj = :cnpj", nativeQuery = true)
-    Optional<Supplier> findSupplierByCnpj(@Param("cnpj") String cnpj);
-    
-    @Query(value = "SELECT * FROM suppliers WHERE email = :email", nativeQuery = true)
-    Optional<Supplier> findSupplierByEmail(@Param("email") String email);
-    
     @Query(value = "INSERT INTO suppliers (name, cnpj, phone, email) VALUES (:#{#supplier.name}, :#{#supplier.cnpj}, :#{#supplier.phone}, :#{#supplier.email}) RETURNING *", nativeQuery = true)
     Supplier saveSupplier(@Param("supplier") Supplier supplier);
     

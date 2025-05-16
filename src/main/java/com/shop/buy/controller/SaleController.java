@@ -109,35 +109,7 @@ public class SaleController {
         return ResponseEntity.ok(saleService.getSalesByCustomerId(customerId));
     }
 
-    @Operation(
-        summary = "Search sales by date range",
-        description = "Retrieves all sales that occurred within the specified date range",
-        tags = {"Sales"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved sales within date range",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = SaleDTO.class))),
-        @ApiResponse(
-            responseCode = "400", 
-            description = "Invalid date range (e.g., startDate after endDate)",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search/date")
-    public ResponseEntity<List<SaleDTO>> getSalesByDateRange(
-            @Parameter(description = "Start date and time (inclusive)", required = true, example = "2023-01-01T00:00:00")
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @Parameter(description = "End date and time (inclusive)", required = true, example = "2023-12-31T23:59:59")
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-        return ResponseEntity.ok(saleService.getSalesByDateRange(startDate, endDate));
-    }
+
 
     @Operation(
         summary = "Create a new sale",

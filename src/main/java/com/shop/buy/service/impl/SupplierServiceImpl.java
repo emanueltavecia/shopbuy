@@ -37,27 +37,6 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<SupplierDTO> getSuppliersByName(String name) {
-        return supplierRepository.findSuppliersByNameContaining(name).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public SupplierDTO getSupplierByCnpj(String cnpj) {
-        Supplier supplier = supplierRepository.findSupplierByCnpj(cnpj)
-                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with CNPJ: " + cnpj));
-        return convertToDTO(supplier);
-    }
-
-    @Override
-    public SupplierDTO getSupplierByEmail(String email) {
-        Supplier supplier = supplierRepository.findSupplierByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Supplier not found with email: " + email));
-        return convertToDTO(supplier);
-    }
-
-    @Override
     @Transactional
     public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
         Supplier supplier = convertToEntity(supplierDTO);

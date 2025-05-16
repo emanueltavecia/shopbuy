@@ -7,7 +7,6 @@ public interface BrandService {
     List<BrandDTO> getAllBrands();
     BrandDTO getBrandById(Long id);
     List<BrandDTO> getBrandsByName(String name);
-    List<BrandDTO> getBrandsByCountry(String country);
     BrandDTO createBrand(BrandDTO brandDTO);
     BrandDTO updateBrand(Long id, BrandDTO brandDTO);
     void deleteBrand(Long id);

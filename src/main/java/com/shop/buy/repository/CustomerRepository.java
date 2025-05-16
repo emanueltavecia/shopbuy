@@ -18,15 +18,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query(value = "SELECT * FROM customers WHERE id = :id", nativeQuery = true)
     Optional<Customer> findCustomerById(@Param("id") Long id);
     
-    @Query(value = "SELECT * FROM customers WHERE name LIKE %:name%", nativeQuery = true)
-    List<Customer> findCustomersByNameContaining(@Param("name") String name);
-    
-    @Query(value = "SELECT * FROM customers WHERE cpf = :cpf", nativeQuery = true)
-    Optional<Customer> findCustomerByCpf(@Param("cpf") String cpf);
-    
-    @Query(value = "SELECT * FROM customers WHERE email = :email", nativeQuery = true)
-    Optional<Customer> findCustomerByEmail(@Param("email") String email);
-    
     @Query(value = "INSERT INTO customers (name, cpf, phone, email) VALUES (:#{#customer.name}, :#{#customer.cpf}, :#{#customer.phone}, :#{#customer.email}) RETURNING *", nativeQuery = true)
     Customer saveCustomer(@Param("customer") Customer customer);
     

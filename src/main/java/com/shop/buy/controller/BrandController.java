@@ -79,51 +79,7 @@ public class BrandController {
         return ResponseEntity.ok(brandService.getBrandById(id));
     }
 
-    @Operation(
-        summary = "Search brands by name",
-        description = "Retrieves all brands that contain the specified name string",
-        tags = {"Brands"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved matching brands",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = BrandDTO.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search/name")
-    public ResponseEntity<List<BrandDTO>> getBrandsByName(
-            @Parameter(description = "Name or partial name to search for", required = true)
-            @RequestParam String name) {
-        return ResponseEntity.ok(brandService.getBrandsByName(name));
-    }
 
-    @Operation(
-        summary = "Search brands by country",
-        description = "Retrieves all brands that are from the specified country",
-        tags = {"Brands"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved brands from the specified country",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = BrandDTO.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search/country")
-    public ResponseEntity<List<BrandDTO>> getBrandsByCountry(
-            @Parameter(description = "Country name to search for", required = true)
-            @RequestParam String country) {
-        return ResponseEntity.ok(brandService.getBrandsByCountry(country));
-    }
 
     @Operation(
         summary = "Create a new brand",

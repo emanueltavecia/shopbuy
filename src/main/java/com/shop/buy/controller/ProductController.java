@@ -80,28 +80,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @Operation(
-        summary = "Search products by name",
-        description = "Retrieves all products that contain the specified name string",
-        tags = {"Products"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved matching products",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search/name")
-    public ResponseEntity<List<ProductDTO>> getProductsByName(
-            @Parameter(description = "Name or partial name to search for", required = true)
-            @RequestParam String name) {
-        return ResponseEntity.ok(productService.getProductsByName(name));
-    }
+
 
     @Operation(
         summary = "Get products by category",
@@ -159,35 +138,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByBrand(brandId));
     }
 
-    @Operation(
-        summary = "Get products by price range",
-        description = "Retrieves all products within the specified price range",
-        tags = {"Products"})
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved products in price range",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(
-            responseCode = "400", 
-            description = "Invalid price range (e.g., minPrice > maxPrice)",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/search/price")
-    public ResponseEntity<List<ProductDTO>> getProductsByPriceRange(
-            @Parameter(description = "Minimum price (inclusive)", required = true)
-            @RequestParam BigDecimal minPrice,
-            @Parameter(description = "Maximum price (inclusive)", required = true)
-            @RequestParam BigDecimal maxPrice) {
-        return ResponseEntity.ok(productService.getProductsByPriceRange(minPrice, maxPrice));
-    }
+
 
     @Operation(
         summary = "Create a new product",
