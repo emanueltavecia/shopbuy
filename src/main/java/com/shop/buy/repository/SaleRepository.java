@@ -28,5 +28,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     Sale updateSale(@Param("id") Long id, @Param("sale") Sale sale);
     
     @Query(value = "DELETE FROM sales WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteSale(@Param("id") Long id);
 }

@@ -25,5 +25,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer updateCustomer(@Param("id") Long id, @Param("customer") Customer customer);
     
     @Query(value = "DELETE FROM customers WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteCustomer(@Param("id") Long id);
 }

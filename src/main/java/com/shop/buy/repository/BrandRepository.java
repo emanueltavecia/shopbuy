@@ -28,5 +28,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     Brand updateBrand(@Param("id") Long id, @Param("brand") Brand brand);
     
     @Query(value = "DELETE FROM brands WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteBrand(@Param("id") Long id);
 }

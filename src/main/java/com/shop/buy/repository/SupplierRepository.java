@@ -25,5 +25,6 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Supplier updateSupplier(@Param("id") Long id, @Param("supplier") Supplier supplier);
     
     @Query(value = "DELETE FROM suppliers WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteSupplier(@Param("id") Long id);
 }

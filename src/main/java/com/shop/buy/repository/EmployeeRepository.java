@@ -25,5 +25,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee updateEmployee(@Param("id") Long id, @Param("employee") Employee employee);
     
     @Query(value = "DELETE FROM employees WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteEmployee(@Param("id") Long id);
 }
