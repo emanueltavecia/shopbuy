@@ -31,5 +31,6 @@ public interface SaleItemRepository extends JpaRepository<SaleItem, Long> {
     SaleItem updateSaleItem(@Param("id") Long id, @Param("saleItem") SaleItem saleItem);
     
     @Query(value = "DELETE FROM sale_items WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteSaleItem(@Param("id") Long id);
 }

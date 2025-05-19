@@ -1,6 +1,7 @@
 package com.shop.buy.controller;
 
 import com.shop.buy.dto.CategoryDTO;
+import com.shop.buy.dto.SuccessResponse;
 import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -160,10 +159,9 @@ public class CategoryController {
         tags = {"Categories"})
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "204", 
-            description = "Category successfully deleted",
-            content = @Content),
-        @ApiResponse(
+            responseCode = "200", 
+            description = "Category successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
+                @ApiResponse(
             responseCode = "404", 
             description = "Category not found",
             content = @Content(mediaType = "application/json", 
@@ -175,10 +173,10 @@ public class CategoryController {
                 schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(
+    public ResponseEntity<SuccessResponse> deleteCategory(
             @Parameter(description = "ID of the category to delete", required = true)
             @PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new SuccessResponse("Categoria excluída com sucesso"));
     }
 }

@@ -25,5 +25,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category updateCategory(@Param("id") Long id, @Param("category") Category category);
     
     @Query(value = "DELETE FROM categories WHERE id = :id", nativeQuery = true)
+    @org.springframework.data.jpa.repository.Modifying
     void deleteCategory(@Param("id") Long id);
 }
