@@ -12,19 +12,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SupplierDTO {
-    
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
-    
-    @NotBlank(message = "Supplier name cannot be blank")
-    private String name;
-    
-    @NotBlank(message = "CNPJ cannot be blank")
-    @Pattern(regexp = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}\\-\\d{2}$", message = "CNPJ must be in the format XX.XXX.XXX/XXXX-XX")
-    private String cnpj;
-    
-    private String phone;
-    
-    @Email(message = "Email should be valid")
-    private String email;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
+
+  @NotBlank(message = "Supplier name cannot be blank")
+  private String name;
+
+  @NotBlank(message = "CNPJ cannot be blank")
+  @Pattern(
+      regexp = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}\\-\\d{2}$",
+      message = "CNPJ must be in the format XX.XXX.XXX/XXXX-XX")
+  private String cnpj;
+
+  private String phone;
+
+  @Email(message = "Email should be valid")
+  private String email;
 }
