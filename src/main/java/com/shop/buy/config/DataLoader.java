@@ -7,12 +7,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DataLoader {
+  @Value("${server.port:8081}")
+  private String serverPort;
+
+  private String getServerSuccessfullyStartedMessage() {
+    return "Access http://localhost:" + serverPort + "/swagger-ui.html see the docs";
+  }
+
   @Bean
   public CommandLineRunner initDatabase(
       CategoryRepository categoryRepository,
@@ -28,6 +36,7 @@ public class DataLoader {
       // Verificar se já existem dados antes de inserir
       if (brandRepository.count() > 0) {
         System.out.println("Database already has data, skipping initialization");
+        System.out.println(getServerSuccessfullyStartedMessage());
         return;
       }
 
@@ -187,6 +196,7 @@ public class DataLoader {
       saleRepository.save(sale2);
 
       System.out.println("Sample data has been loaded into the database successfully!");
+      System.out.println(getServerSuccessfullyStartedMessage());
     };
   }
 }
