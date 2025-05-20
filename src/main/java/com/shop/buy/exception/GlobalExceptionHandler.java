@@ -41,12 +41,10 @@ public class GlobalExceptionHandler {
       DataIntegrityViolationException ex, WebRequest request) {
     String errorMessage = "Erro de banco de dados: ";
 
-    // Extract the specific database error message
     Throwable rootCause = ex.getRootCause();
     if (rootCause != null) {
       String rootCauseMessage = rootCause.getMessage();
 
-      // Check for duplicate entry
       if (rootCauseMessage != null) {
         if (rootCauseMessage.contains("unique constraint")
             || rootCauseMessage.contains("Duplicate entry")) {
@@ -76,9 +74,8 @@ public class GlobalExceptionHandler {
     return createErrorResponse(errorMessage, HttpStatus.BAD_REQUEST, request);
   }
 
-  /** Extract field name from database error message */
   private String extractFieldNameFromError(String errorMessage) {
-    // Common field names to check for
+
     String[] commonFields = {"cnpj", "cpf", "email", "name", "username", "phone", "description"};
     String[] formattedFields = {
       "CNPJ", "CPF", "e-mail", "nome", "nome de Usuário", "telefone", "descrição"
@@ -92,8 +89,6 @@ public class GlobalExceptionHandler {
       }
     }
 
-    // Check for column name patterns in common DB error messages
-    // PostgreSQL pattern: Key (column)=(value) already exists
     if (errorMessage.contains("key (") && errorMessage.contains(")=")) {
       int start = errorMessage.indexOf("key (") + 5;
       int end = errorMessage.indexOf(")=", start);
@@ -102,13 +97,12 @@ public class GlobalExceptionHandler {
       }
     }
 
-    // MySQL pattern: Duplicate entry 'value' for key 'table.column'
     if (errorMessage.contains("for key '")) {
       int keyIndex = errorMessage.indexOf("for key '") + 9;
       int endIndex = errorMessage.indexOf("'", keyIndex);
       if (keyIndex > 0 && endIndex > keyIndex) {
         String key = errorMessage.substring(keyIndex, endIndex);
-        // Usually key is in format table.column or constraint_name
+
         if (key.contains(".")) {
           return key.substring(key.indexOf(".") + 1);
         }
@@ -119,9 +113,8 @@ public class GlobalExceptionHandler {
     return null;
   }
 
-  /** Extract entity name from database error message */
   private String extractEntityNameFromError(String errorMessage) {
-    // Common entity names
+
     String[] entities = {
       "supplier", "brand", "customer", "product", "employee", "category", "sale"
     };
@@ -138,7 +131,6 @@ public class GlobalExceptionHandler {
       }
     }
 
-    // Try to extract from table name in error message
     if (errorMessage.contains("table ")) {
       int tableIndex = errorMessage.indexOf("table ") + 6;
       int endIndex = errorMessage.indexOf(" ", tableIndex);

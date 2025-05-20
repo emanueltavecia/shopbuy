@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   @Transactional
   public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
-    // Verify employee exists
+
     employeeRepository
         .findEmployeeById(id)
         .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com id: " + id));
@@ -62,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
   @Override
   @Transactional
   public void deleteEmployee(Long id) {
-    // Verify employee exists
+
     employeeRepository
         .findEmployeeById(id)
         .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com id: " + id));

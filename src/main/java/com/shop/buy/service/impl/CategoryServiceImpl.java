@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   @Transactional
   public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
-    // Verify category exists
+
     categoryRepository
         .findCategoryById(id)
         .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com id: " + id));
@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   @Transactional
   public void deleteCategory(Long id) {
-    // Verify category exists
+
     categoryRepository
         .findCategoryById(id)
         .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com id: " + id));

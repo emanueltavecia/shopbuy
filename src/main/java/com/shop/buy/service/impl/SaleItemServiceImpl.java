@@ -74,7 +74,7 @@ public class SaleItemServiceImpl implements SaleItemService {
   @Override
   @Transactional
   public SaleItemDTO updateSaleItem(Long id, SaleItemDTO saleItemDTO) {
-    // Verify sale item exists
+
     saleItemRepository
         .findSaleItemById(id)
         .orElseThrow(
@@ -88,7 +88,7 @@ public class SaleItemServiceImpl implements SaleItemService {
   @Override
   @Transactional
   public void deleteSaleItem(Long id) {
-    // Verify sale item exists
+
     saleItemRepository
         .findSaleItemById(id)
         .orElseThrow(
