@@ -20,81 +20,81 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
-@Tag(name = "Customers", description = "Customer management endpoints")
+@Tag(name = "Clientes", description = "Endpoints para gerenciamento de clientes")
 public class CustomerController {
 
-    private final CustomerService customerService;
+        private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+        public CustomerController(CustomerService customerService) {
+                this.customerService = customerService;
+        }
 
-    @Operation(summary = "Get all customers", description = "Retrieves a list of all customers in the system", tags = {
-            "Customers" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved all customers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return ResponseEntity.ok(customerService.getAllCustomers());
-    }
+        @Operation(summary = "Obter todos os clientes", description = "Retorna uma lista de todos os clientes registrados", tags = {
+                        "Clientes" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Clientes recuperados com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping
+        public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+                return ResponseEntity.ok(customerService.getAllCustomers());
+        }
 
-    @Operation(summary = "Get customer by ID", description = "Retrieves a specific customer by their unique identifier", tags = {
-            "Customers" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved the customer", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDTO> getCustomerById(
-            @Parameter(description = "ID of the customer to retrieve", required = true) @PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
-    }
+        @Operation(summary = "Obter cliente por ID", description = "Retorna um cliente específico pelo seu identificador único", tags = {
+                        "Clientes" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Cliente recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
+                        @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping("/{id}")
+        public ResponseEntity<CustomerDTO> getCustomerById(
+                        @Parameter(description = "ID do cliente a ser recuperado", required = true) @PathVariable Long id) {
+                return ResponseEntity.ok(customerService.getCustomerById(id));
+        }
 
-    @Operation(summary = "Create a new customer", description = "Creates a new customer in the system", tags = {
-            "Customers" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Customer successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Customer with the same CPF or email already exists", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(
-            @Parameter(description = "Customer details for creation", required = true) @Valid @RequestBody CustomerDTO customerDTO) {
-        return new ResponseEntity<>(customerService.createCustomer(customerDTO), HttpStatus.CREATED);
-    }
+        @Operation(summary = "Criar um novo cliente", description = "Cria um novo cliente", tags = {
+                        "Clientes" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "Cliente com o mesmo CPF ou email já existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PostMapping
+        public ResponseEntity<CustomerDTO> createCustomer(
+                        @Parameter(description = "Detalhes do cliente para criação", required = true) @Valid @RequestBody CustomerDTO customerDTO) {
+                return new ResponseEntity<>(customerService.createCustomer(customerDTO), HttpStatus.CREATED);
+        }
 
-    @Operation(summary = "Update an existing customer", description = "Updates an existing customer's information based on the given ID", tags = {
-            "Customers" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Customer successfully updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Customer CPF or email conflicts with an existing customer", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomer(
-            @Parameter(description = "ID of the customer to update", required = true) @PathVariable Long id,
-            @Parameter(description = "Updated customer information", required = true) @Valid @RequestBody CustomerDTO customerDTO) {
-        return ResponseEntity.ok(customerService.updateCustomer(id, customerDTO));
-    }
+        @Operation(summary = "Atualizar um cliente existente", description = "Atualiza as informações de um cliente existente com base no ID fornecido", tags = {
+                        "Clientes" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "CPF ou email do cliente conflita com um cliente existente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PutMapping("/{id}")
+        public ResponseEntity<CustomerDTO> updateCustomer(
+                        @Parameter(description = "ID do cliente a ser atualizado", required = true) @PathVariable Long id,
+                        @Parameter(description = "Informações atualizadas do cliente", required = true) @Valid @RequestBody CustomerDTO customerDTO) {
+                return ResponseEntity.ok(customerService.updateCustomer(id, customerDTO));
+        }
 
-    @Operation(summary = "Delete a customer", description = "Removes a customer from the system by their ID", tags = {
-            "Customers" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Customer successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Customer not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Cannot delete customer because they have associated sales", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessResponse> deleteCustomer(
-            @Parameter(description = "ID of the customer to delete", required = true) @PathVariable Long id) {
-        customerService.deleteCustomer(id);
-        return ResponseEntity.ok(new SuccessResponse("Cliente excluído com sucesso"));
-    }
+        @Operation(summary = "Excluir um cliente", description = "Remove um cliente do sistema pelo seu ID", tags = {
+                        "Clientes" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Cliente excluído com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Cliente não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "Não é possível excluir o cliente porque possui vendas associadas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @DeleteMapping("/{id}")
+        public ResponseEntity<SuccessResponse> deleteCustomer(
+                        @Parameter(description = "ID do cliente a ser excluído", required = true) @PathVariable Long id) {
+                customerService.deleteCustomer(id);
+                return ResponseEntity.ok(new SuccessResponse("Cliente excluído com sucesso"));
+        }
 }
