@@ -40,7 +40,7 @@ public class ProductController {
                 return ResponseEntity.ok(productService.getAllProducts());
         }
 
-        @Operation(summary = "Obter produto por ID", description = "Retorna um produto específico pelo seu identificador único", tags = {
+        @Operation(summary = "Obter produto por ID", description = "Retorna um produto específico pelo seu ID", tags = {
                         "Produtos" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Produto recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
