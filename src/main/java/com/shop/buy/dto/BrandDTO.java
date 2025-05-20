@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BrandDTO {
-    
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
-    
-    @NotBlank(message = "Brand name cannot be blank")
-    private String name;
-    
-    private String country;
-    
-    private String description;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
+
+  @NotBlank(message = "Brand name cannot be blank")
+  private String name;
+
+  private String country;
+
+  private String description;
 }

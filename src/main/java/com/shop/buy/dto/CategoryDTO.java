@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDTO {
-    
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
-    
-    @NotBlank(message = "Category name cannot be blank")
-    private String name;
-    
-    private String description;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
+
+  @NotBlank(message = "Category name cannot be blank")
+  private String name;
+
+  private String description;
 }
