@@ -55,10 +55,11 @@ public class GlobalExceptionHandler {
           String entityName = extractEntityNameFromError(rootCauseMessage);
 
           if (fieldName != null && !fieldName.isEmpty()) {
-            errorMessage = "Já existe um "
-                + (entityName != null ? entityName : "registro")
-                + " com o mesmo "
-                + fieldName;
+            errorMessage =
+                "Já existe um "
+                    + (entityName != null ? entityName : "registro")
+                    + " com o mesmo "
+                    + fieldName;
           } else {
             errorMessage = "Já existe um registro com os mesmos valores para campos únicos";
           }
@@ -78,9 +79,9 @@ public class GlobalExceptionHandler {
   /** Extract field name from database error message */
   private String extractFieldNameFromError(String errorMessage) {
     // Common field names to check for
-    String[] commonFields = { "cnpj", "cpf", "email", "name", "username", "phone", "description" };
+    String[] commonFields = {"cnpj", "cpf", "email", "name", "username", "phone", "description"};
     String[] formattedFields = {
-        "CNPJ", "CPF", "e-mail", "nome", "nome de Usuário", "telefone", "descrição"
+      "CNPJ", "CPF", "e-mail", "nome", "nome de Usuário", "telefone", "descrição"
     };
 
     errorMessage = errorMessage.toLowerCase();
@@ -122,14 +123,18 @@ public class GlobalExceptionHandler {
   private String extractEntityNameFromError(String errorMessage) {
     // Common entity names
     String[] entities = {
-        "supplier", "brand", "customer", "product", "employee", "category", "sale"
+      "supplier", "brand", "customer", "product", "employee", "category", "sale"
+    };
+
+    String[] translatedEntities = {
+      "fornecedor", "marca", "cliente", "produto", "funcionário", "categoria", "venda"
     };
 
     errorMessage = errorMessage.toLowerCase();
 
-    for (String entity : entities) {
-      if (errorMessage.contains(entity)) {
-        return entity;
+    for (int i = 0; i < entities.length; i++) {
+      if (errorMessage.contains(entities[i])) {
+        return translatedEntities[i];
       }
     }
 
@@ -159,12 +164,13 @@ public class GlobalExceptionHandler {
               errors.put(fieldName, errorMessage);
             });
 
-    ValidationErrorResponse errorResponse = new ValidationErrorResponse(
-        HttpStatus.BAD_REQUEST.value(),
-        "Falha na validação",
-        LocalDateTime.now(),
-        request.getDescription(false),
-        errors);
+    ValidationErrorResponse errorResponse =
+        new ValidationErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "Falha na validação",
+            LocalDateTime.now(),
+            request.getDescription(false),
+            errors);
 
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
@@ -182,12 +188,13 @@ public class GlobalExceptionHandler {
               errors.put(fieldName, errorMessage);
             });
 
-    ValidationErrorResponse errorResponse = new ValidationErrorResponse(
-        HttpStatus.BAD_REQUEST.value(),
-        "Falha na validação",
-        LocalDateTime.now(),
-        request.getDescription(false),
-        errors);
+    ValidationErrorResponse errorResponse =
+        new ValidationErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "Falha na validação",
+            LocalDateTime.now(),
+            request.getDescription(false),
+            errors);
 
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
@@ -202,8 +209,9 @@ public class GlobalExceptionHandler {
 
   private ResponseEntity<ErrorResponse> createErrorResponse(
       String message, HttpStatus status, WebRequest request) {
-    ErrorResponse errorResponse = new ErrorResponse(
-        status.value(), message, LocalDateTime.now(), request.getDescription(false));
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            status.value(), message, LocalDateTime.now(), request.getDescription(false));
     return new ResponseEntity<>(errorResponse, status);
   }
 }

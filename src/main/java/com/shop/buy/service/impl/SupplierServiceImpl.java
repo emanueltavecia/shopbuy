@@ -33,7 +33,8 @@ public class SupplierServiceImpl implements SupplierService {
     Supplier supplier =
         supplierRepository
             .findSupplierById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id: " + id));
+            .orElseThrow(
+                () -> new EntityNotFoundException("Fornecedor não encontrado com id: " + id));
     return convertToDTO(supplier);
   }
 
@@ -51,7 +52,7 @@ public class SupplierServiceImpl implements SupplierService {
     // Verify supplier exists
     supplierRepository
         .findSupplierById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado com id: " + id));
 
     Supplier supplier = convertToEntity(supplierDTO);
     Supplier updatedSupplier = supplierRepository.updateSupplier(id, supplier);
@@ -64,7 +65,7 @@ public class SupplierServiceImpl implements SupplierService {
     // Verify supplier exists
     supplierRepository
         .findSupplierById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Supplier not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado com id: " + id));
 
     supplierRepository.deleteSupplier(id);
   }

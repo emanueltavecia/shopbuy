@@ -35,7 +35,7 @@ public class BrandServiceImpl implements BrandService {
     Brand brand =
         brandRepository
             .findBrandById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
+            .orElseThrow(() -> new ResourceNotFoundException("Marca", "id", id));
     return convertToDTO(brand);
   }
 
@@ -55,7 +55,7 @@ public class BrandServiceImpl implements BrandService {
         .findFirst()
         .ifPresent(
             brand -> {
-              throw new DuplicateResourceException("Brand", "name", brandDTO.getName());
+              throw new DuplicateResourceException("Marca", "nome", brandDTO.getName());
             });
 
     try {
@@ -66,7 +66,7 @@ public class BrandServiceImpl implements BrandService {
       // This will catch any database constraint violations
       if (e.getMessage().contains("unique")
           || (e.getRootCause() != null && e.getRootCause().getMessage().contains("unique"))) {
-        throw new DuplicateResourceException("Brand with the same name already exists");
+        throw new DuplicateResourceException("Marca com o mesmo nome já existe");
       }
       throw e;
     }
@@ -78,7 +78,7 @@ public class BrandServiceImpl implements BrandService {
     // Verify brand exists
     brandRepository
         .findBrandById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
+        .orElseThrow(() -> new ResourceNotFoundException("Marca", "id", id));
 
     // Check if brand with same name already exists (except for the current brand)
     brandRepository.findBrandsByNameContaining(brandDTO.getName()).stream()
@@ -86,7 +86,7 @@ public class BrandServiceImpl implements BrandService {
         .findFirst()
         .ifPresent(
             brand -> {
-              throw new DuplicateResourceException("Brand", "name", brandDTO.getName());
+              throw new DuplicateResourceException("Marca", "nome", brandDTO.getName());
             });
 
     try {
@@ -97,7 +97,7 @@ public class BrandServiceImpl implements BrandService {
       // This will catch any database constraint violations
       if (e.getMessage().contains("unique")
           || (e.getRootCause() != null && e.getRootCause().getMessage().contains("unique"))) {
-        throw new DuplicateResourceException("Brand with the same name already exists");
+        throw new DuplicateResourceException("Marca com o mesmo nome já existe");
       }
       throw e;
     }
@@ -109,12 +109,13 @@ public class BrandServiceImpl implements BrandService {
     // Verify brand exists
     brandRepository
         .findBrandById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Brand", "id", id));
+        .orElseThrow(() -> new ResourceNotFoundException("Marca", "id", id));
 
     try {
       brandRepository.deleteBrand(id);
     } catch (DataIntegrityViolationException e) {
-      throw new RuntimeException("Cannot delete brand as it is referenced by other records");
+      throw new RuntimeException(
+          "Não é possível excluir a marca, pois está sendo referenciada por outros registros");
     }
   }
 

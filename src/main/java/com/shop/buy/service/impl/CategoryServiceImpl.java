@@ -33,7 +33,8 @@ public class CategoryServiceImpl implements CategoryService {
     Category category =
         categoryRepository
             .findCategoryById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+            .orElseThrow(
+                () -> new EntityNotFoundException("Categoria não encontrada com id: " + id));
     return convertToDTO(category);
   }
 
@@ -51,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
     // Verify category exists
     categoryRepository
         .findCategoryById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com id: " + id));
 
     Category category = convertToEntity(categoryDTO);
     Category updatedCategory = categoryRepository.updateCategory(id, category);
@@ -64,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
     // Verify category exists
     categoryRepository
         .findCategoryById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com id: " + id));
 
     categoryRepository.deleteCategory(id);
   }

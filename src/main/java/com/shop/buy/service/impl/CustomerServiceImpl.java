@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
     Customer customer =
         customerRepository
             .findCustomerById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+            .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id: " + id));
     return convertToDTO(customer);
   }
 
@@ -51,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
     // Verify customer exists
     customerRepository
         .findCustomerById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id: " + id));
 
     Customer customer = convertToEntity(customerDTO);
     Customer updatedCustomer = customerRepository.updateCustomer(id, customer);
@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
     // Verify customer exists
     customerRepository
         .findCustomerById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id: " + id));
 
     customerRepository.deleteCustomer(id);
   }
