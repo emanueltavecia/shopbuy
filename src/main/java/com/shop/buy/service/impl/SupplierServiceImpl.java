@@ -49,7 +49,7 @@ public class SupplierServiceImpl implements SupplierService {
   @Override
   @Transactional
   public SupplierDTO updateSupplier(Long id, SupplierDTO supplierDTO) {
-    // Verify supplier exists
+
     supplierRepository
         .findSupplierById(id)
         .orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado com id: " + id));
@@ -62,7 +62,7 @@ public class SupplierServiceImpl implements SupplierService {
   @Override
   @Transactional
   public void deleteSupplier(Long id) {
-    // Verify supplier exists
+
     supplierRepository
         .findSupplierById(id)
         .orElseThrow(() -> new EntityNotFoundException("Fornecedor não encontrado com id: " + id));

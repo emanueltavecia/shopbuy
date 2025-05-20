@@ -59,7 +59,7 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
-    // Verify sale exists
+
     saleRepository
         .findSaleById(id)
         .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
@@ -72,7 +72,7 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public void deleteSale(Long id) {
-    // Verify sale exists
+
     saleRepository
         .findSaleById(id)
         .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));

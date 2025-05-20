@@ -49,7 +49,7 @@ public class BrandServiceImpl implements BrandService {
   @Override
   @Transactional
   public BrandDTO createBrand(BrandDTO brandDTO) {
-    // Check if brand with same name already exists
+
     brandRepository.findBrandsByNameContaining(brandDTO.getName()).stream()
         .filter(b -> b.getName().equalsIgnoreCase(brandDTO.getName()))
         .findFirst()
@@ -63,7 +63,7 @@ public class BrandServiceImpl implements BrandService {
       Brand savedBrand = brandRepository.saveBrand(brand);
       return convertToDTO(savedBrand);
     } catch (DataIntegrityViolationException e) {
-      // This will catch any database constraint violations
+
       if (e.getMessage().contains("unique")
           || (e.getRootCause() != null && e.getRootCause().getMessage().contains("unique"))) {
         throw new DuplicateResourceException("Marca com o mesmo nome já existe");
@@ -75,12 +75,11 @@ public class BrandServiceImpl implements BrandService {
   @Override
   @Transactional
   public BrandDTO updateBrand(Long id, BrandDTO brandDTO) {
-    // Verify brand exists
+
     brandRepository
         .findBrandById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Marca", "id", id));
 
-    // Check if brand with same name already exists (except for the current brand)
     brandRepository.findBrandsByNameContaining(brandDTO.getName()).stream()
         .filter(b -> b.getName().equalsIgnoreCase(brandDTO.getName()) && !b.getId().equals(id))
         .findFirst()
@@ -94,7 +93,7 @@ public class BrandServiceImpl implements BrandService {
       Brand updatedBrand = brandRepository.updateBrand(id, brand);
       return convertToDTO(updatedBrand);
     } catch (DataIntegrityViolationException e) {
-      // This will catch any database constraint violations
+
       if (e.getMessage().contains("unique")
           || (e.getRootCause() != null && e.getRootCause().getMessage().contains("unique"))) {
         throw new DuplicateResourceException("Marca com o mesmo nome já existe");
@@ -106,7 +105,7 @@ public class BrandServiceImpl implements BrandService {
   @Override
   @Transactional
   public void deleteBrand(Long id) {
-    // Verify brand exists
+
     brandRepository
         .findBrandById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Marca", "id", id));

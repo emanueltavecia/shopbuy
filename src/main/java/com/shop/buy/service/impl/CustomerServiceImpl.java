@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   @Transactional
   public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
-    // Verify customer exists
+
     customerRepository
         .findCustomerById(id)
         .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id: " + id));
@@ -61,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   @Transactional
   public void deleteCustomer(Long id) {
-    // Verify customer exists
+
     customerRepository
         .findCustomerById(id)
         .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com id: " + id));

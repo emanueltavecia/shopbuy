@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-    // Verify product exists
+
     productRepository
         .findProductById(id)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
   @Override
   @Transactional
   public void deleteProduct(Long id) {
-    // Verify product exists
+
     productRepository
         .findProductById(id)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
