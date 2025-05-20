@@ -20,81 +20,81 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
-@Tag(name = "Employees", description = "Employee management endpoints")
+@Tag(name = "Funcionários", description = "Endpoints para gerenciamento de funcionários")
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+        private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
+        public EmployeeController(EmployeeService employeeService) {
+                this.employeeService = employeeService;
+        }
 
-    @Operation(summary = "Get all employees", description = "Retrieves a list of all employees in the system", tags = {
-            "Employees" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved all employees", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
-    }
+        @Operation(summary = "Obter todos os funcionários", description = "Retorna uma lista de todos os funcionários registrados", tags = {
+                        "Funcionários" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Funcionários recuperados com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping
+        public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+                return ResponseEntity.ok(employeeService.getAllEmployees());
+        }
 
-    @Operation(summary = "Get employee by ID", description = "Retrieves a specific employee by their unique identifier", tags = {
-            "Employees" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved the employee", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(
-            @Parameter(description = "ID of the employee to retrieve", required = true) @PathVariable Long id) {
-        return ResponseEntity.ok(employeeService.getEmployeeById(id));
-    }
+        @Operation(summary = "Obter funcionário por ID", description = "Retorna um funcionário específico pelo seu identificador único", tags = {
+                        "Funcionários" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Funcionário recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
+                        @ApiResponse(responseCode = "404", description = "Funcionário não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping("/{id}")
+        public ResponseEntity<EmployeeDTO> getEmployeeById(
+                        @Parameter(description = "ID do funcionário a ser recuperado", required = true) @PathVariable Long id) {
+                return ResponseEntity.ok(employeeService.getEmployeeById(id));
+        }
 
-    @Operation(summary = "Create a new employee", description = "Creates a new employee in the system", tags = {
-            "Employees" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Employee successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Employee with the same email already exists", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(
-            @Parameter(description = "Employee details for creation", required = true) @Valid @RequestBody EmployeeDTO employeeDTO) {
-        return new ResponseEntity<>(employeeService.createEmployee(employeeDTO), HttpStatus.CREATED);
-    }
+        @Operation(summary = "Criar um novo funcionário", description = "Cria um novo funcionário", tags = {
+                        "Funcionários" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "Funcionário com o mesmo email já existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PostMapping
+        public ResponseEntity<EmployeeDTO> createEmployee(
+                        @Parameter(description = "Detalhes do funcionário para criação", required = true) @Valid @RequestBody EmployeeDTO employeeDTO) {
+                return new ResponseEntity<>(employeeService.createEmployee(employeeDTO), HttpStatus.CREATED);
+        }
 
-    @Operation(summary = "Update an existing employee", description = "Updates an existing employee's information based on the given ID", tags = {
-            "Employees" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Employee successfully updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Employee email conflicts with an existing employee", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(
-            @Parameter(description = "ID of the employee to update", required = true) @PathVariable Long id,
-            @Parameter(description = "Updated employee information", required = true) @Valid @RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.ok(employeeService.updateEmployee(id, employeeDTO));
-    }
+        @Operation(summary = "Atualizar um funcionário existente", description = "Atualiza as informações de um funcionário existente com base no ID fornecido", tags = {
+                        "Funcionários" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Funcionário atualizado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Funcionário não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "Email do funcionário conflita com um funcionário existente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @PutMapping("/{id}")
+        public ResponseEntity<EmployeeDTO> updateEmployee(
+                        @Parameter(description = "ID do funcionário a ser atualizado", required = true) @PathVariable Long id,
+                        @Parameter(description = "Informações atualizadas do funcionário", required = true) @Valid @RequestBody EmployeeDTO employeeDTO) {
+                return ResponseEntity.ok(employeeService.updateEmployee(id, employeeDTO));
+        }
 
-    @Operation(summary = "Delete an employee", description = "Removes an employee from the system by their ID", tags = {
-            "Employees" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Employee successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "409", description = "Cannot delete employee because they are associated with sales", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessResponse> deleteEmployee(
-            @Parameter(description = "ID of the employee to delete", required = true) @PathVariable Long id) {
-        employeeService.deleteEmployee(id);
-        return ResponseEntity.ok(new SuccessResponse("Funcionário excluído com sucesso"));
-    }
+        @Operation(summary = "Excluir um funcionário", description = "Remove um funcionário do sistema pelo seu ID", tags = {
+                        "Funcionários" })
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "Funcionário excluído com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Funcionário não encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "409", description = "Não é possível excluir o funcionário porque está associado a vendas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @DeleteMapping("/{id}")
+        public ResponseEntity<SuccessResponse> deleteEmployee(
+                        @Parameter(description = "ID do funcionário a ser excluído", required = true) @PathVariable Long id) {
+                employeeService.deleteEmployee(id);
+                return ResponseEntity.ok(new SuccessResponse("Funcionário excluído com sucesso"));
+        }
 }

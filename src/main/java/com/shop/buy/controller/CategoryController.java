@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@Tag(name = "Categories", description = "Category management endpoints")
+@Tag(name = "Categorias", description = "Endpoints para gerenciamento de categorias")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -29,153 +29,70 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @Operation(
-        summary = "Get all categories",
-        description = "Retrieves a list of all product categories in the system",
-        tags = {"Categories"})
+    @Operation(summary = "Obter todas as categorias", description = "Retorna uma lista de todas as categorias registradas", tags = {
+            "Categorias" })
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved all categories",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = CategoryDTO.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Categorias retornadas com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
-    @Operation(
-        summary = "Get category by ID",
-        description = "Retrieves a specific product category by its unique identifier",
-        tags = {"Categories"})
+    @Operation(summary = "Obter categoria por ID", description = "Retorna uma categoria específica pelo seu identificador único", tags = {
+            "Categorias" })
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Successfully retrieved the category",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = CategoryDTO.class))),
-        @ApiResponse(
-            responseCode = "404", 
-            description = "Category not found",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Categoria retornada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(
-            @Parameter(description = "ID of the category to retrieve", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "ID da categoria a ser buscada", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-
-
-    @Operation(
-        summary = "Create a new category",
-        description = "Creates a new product category in the system",
-        tags = {"Categories"})
+    @Operation(summary = "Criar uma nova categoria", description = "Cria uma nova categoria", tags = {
+            "Categorias" })
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "201", 
-            description = "Category successfully created",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = CategoryDTO.class))),
-        @ApiResponse(
-            responseCode = "400", 
-            description = "Invalid input data",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "409", 
-            description = "Category already exists",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "201", description = "Categoria criada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Dados do body inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Categoria já existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(
-            @Parameter(description = "Category details for creation", required = true)
-            @Valid @RequestBody CategoryDTO categoryDTO) {
+            @Parameter(description = "Detalhes da categoria para criação", required = true) @Valid @RequestBody CategoryDTO categoryDTO) {
         return new ResponseEntity<>(categoryService.createCategory(categoryDTO), HttpStatus.CREATED);
     }
 
-    @Operation(
-        summary = "Update an existing category",
-        description = "Updates an existing category's information based on the given ID",
-        tags = {"Categories"})
+    @Operation(summary = "Atualizar uma categoria existente", description = "Atualiza as informações de uma categoria existente com base no ID fornecido", tags = {
+            "Categorias" })
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Category successfully updated",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = CategoryDTO.class))),
-        @ApiResponse(
-            responseCode = "400", 
-            description = "Invalid input data",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "404", 
-            description = "Category not found",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "409", 
-            description = "Category name already in use",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Dados do body inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Nome da categoria já em uso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
-            @Parameter(description = "ID of the category to update", required = true)
-            @PathVariable Long id,
-            @Parameter(description = "Updated category information", required = true)
-            @Valid @RequestBody CategoryDTO categoryDTO) {
+            @Parameter(description = "ID da categoria a ser atualizada", required = true) @PathVariable Long id,
+            @Parameter(description = "Informações atualizadas da categoria", required = true) @Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(categoryService.updateCategory(id, categoryDTO));
     }
 
-    @Operation(
-        summary = "Delete a category",
-        description = "Removes a product category from the system by its ID",
-        tags = {"Categories"})
+    @Operation(summary = "Excluir uma categoria", description = "Exclui uma categoria de produto do sistema pelo seu ID", tags = {
+            "Categorias" })
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Category successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
-                @ApiResponse(
-            responseCode = "404", 
-            description = "Category not found",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500", 
-            description = "Internal server error",
-            content = @Content(mediaType = "application/json", 
-                schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "Categoria excluída com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse> deleteCategory(
-            @Parameter(description = "ID of the category to delete", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "ID da categoria a ser excluída", required = true) @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok(new SuccessResponse("Categoria excluída com sucesso"));
     }
