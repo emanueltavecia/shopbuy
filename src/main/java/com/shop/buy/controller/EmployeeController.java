@@ -40,7 +40,7 @@ public class EmployeeController {
                 return ResponseEntity.ok(employeeService.getAllEmployees());
         }
 
-        @Operation(summary = "Obter funcionário por ID", description = "Retorna um funcionário específico pelo seu identificador único", tags = {
+        @Operation(summary = "Obter funcionário por ID", description = "Retorna um funcionário específico pelo seu ID", tags = {
                         "Funcionários" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Funcionário recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeDTO.class))),

@@ -40,7 +40,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
-    @Operation(summary = "Obter categoria por ID", description = "Retorna uma categoria específica pelo seu identificador único", tags = {
+    @Operation(summary = "Obter categoria por ID", description = "Retorna uma categoria específica pelo seu ID", tags = {
             "Categorias" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categoria retornada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDTO.class))),

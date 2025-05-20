@@ -40,7 +40,7 @@ public class SaleController {
                 return ResponseEntity.ok(saleService.getAllSales());
         }
 
-        @Operation(summary = "Obter venda por ID", description = "Retorna uma venda específica pelo seu identificador único", tags = {
+        @Operation(summary = "Obter venda por ID", description = "Retorna uma venda específica pelo seu ID", tags = {
                         "Vendas" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Venda recuperada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaleDTO.class))),

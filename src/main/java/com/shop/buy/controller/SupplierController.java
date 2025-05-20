@@ -40,7 +40,7 @@ public class SupplierController {
                 return ResponseEntity.ok(supplierService.getAllSuppliers());
         }
 
-        @Operation(summary = "Obter fornecedor por ID", description = "Retorna um fornecedor específico pelo seu identificador único", tags = {
+        @Operation(summary = "Obter fornecedor por ID", description = "Retorna um fornecedor específico pelo seu ID", tags = {
                         "Fornecedores" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Fornecedor recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SupplierDTO.class))),

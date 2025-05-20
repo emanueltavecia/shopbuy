@@ -40,7 +40,7 @@ public class CustomerController {
                 return ResponseEntity.ok(customerService.getAllCustomers());
         }
 
-        @Operation(summary = "Obter cliente por ID", description = "Retorna um cliente específico pelo seu identificador único", tags = {
+        @Operation(summary = "Obter cliente por ID", description = "Retorna um cliente específico pelo seu ID", tags = {
                         "Clientes" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Cliente recuperado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomerDTO.class))),

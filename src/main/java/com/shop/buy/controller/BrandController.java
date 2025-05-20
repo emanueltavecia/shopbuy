@@ -40,7 +40,7 @@ public class BrandController {
                 return ResponseEntity.ok(brandService.getAllBrands());
         }
 
-        @Operation(summary = "Obter marca por ID", description = "Retorna uma marca específica pelo seu identificador único", tags = {
+        @Operation(summary = "Obter marca por ID", description = "Retorna uma marca específica pelo seu ID", tags = {
                         "Marcas" })
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Marca retornada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BrandDTO.class))),
