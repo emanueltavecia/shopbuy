@@ -33,7 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     Employee employee =
         employeeRepository
             .findEmployeeById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
+            .orElseThrow(
+                () -> new EntityNotFoundException("Funcionário não encontrado com id: " + id));
     return convertToDTO(employee);
   }
 
@@ -51,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     // Verify employee exists
     employeeRepository
         .findEmployeeById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com id: " + id));
 
     Employee employee = convertToEntity(employeeDTO);
     Employee updatedEmployee = employeeRepository.updateEmployee(id, employee);
@@ -64,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     // Verify employee exists
     employeeRepository
         .findEmployeeById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado com id: " + id));
 
     employeeRepository.deleteEmployee(id);
   }

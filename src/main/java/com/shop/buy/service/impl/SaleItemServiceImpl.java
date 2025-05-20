@@ -44,7 +44,8 @@ public class SaleItemServiceImpl implements SaleItemService {
     SaleItem saleItem =
         saleItemRepository
             .findSaleItemById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Sale item not found with id: " + id));
+            .orElseThrow(
+                () -> new EntityNotFoundException("Item de venda não encontrado com id: " + id));
     return convertToDTO(saleItem);
   }
 
@@ -76,7 +77,8 @@ public class SaleItemServiceImpl implements SaleItemService {
     // Verify sale item exists
     saleItemRepository
         .findSaleItemById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Sale item not found with id: " + id));
+        .orElseThrow(
+            () -> new EntityNotFoundException("Item de venda não encontrado com id: " + id));
 
     SaleItem saleItem = convertToEntity(saleItemDTO);
     SaleItem updatedSaleItem = saleItemRepository.updateSaleItem(id, saleItem);
@@ -89,7 +91,8 @@ public class SaleItemServiceImpl implements SaleItemService {
     // Verify sale item exists
     saleItemRepository
         .findSaleItemById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Sale item not found with id: " + id));
+        .orElseThrow(
+            () -> new EntityNotFoundException("Item de venda não encontrado com id: " + id));
 
     saleItemRepository.deleteSaleItem(id);
   }
@@ -114,7 +117,8 @@ public class SaleItemServiceImpl implements SaleItemService {
         saleRepository
             .findSaleById(dto.getSaleId())
             .orElseThrow(
-                () -> new EntityNotFoundException("Sale not found with id: " + dto.getSaleId()));
+                () ->
+                    new EntityNotFoundException("Venda não encontrada com id: " + dto.getSaleId()));
     saleItem.setSale(sale);
 
     Product product =
@@ -123,7 +127,7 @@ public class SaleItemServiceImpl implements SaleItemService {
             .orElseThrow(
                 () ->
                     new EntityNotFoundException(
-                        "Product not found with id: " + dto.getProductId()));
+                        "Produto não encontrado com id: " + dto.getProductId()));
     saleItem.setProduct(product);
 
     return saleItem;

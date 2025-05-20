@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     Product product =
         productRepository
             .findProductById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
     return convertToDTO(product);
   }
 
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     // Verify product exists
     productRepository
         .findProductById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
 
     Product product = convertToEntity(productDTO);
     Product updatedProduct = productRepository.updateProduct(id, product);
@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
     // Verify product exists
     productRepository
         .findProductById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
 
     productRepository.deleteProduct(id);
   }

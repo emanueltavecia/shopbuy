@@ -37,7 +37,7 @@ public class SaleServiceImpl implements SaleService {
     Sale sale =
         saleRepository
             .findSaleById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Sale not found with id: " + id));
+            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
     return convertToDTO(sale);
   }
 
@@ -62,7 +62,7 @@ public class SaleServiceImpl implements SaleService {
     // Verify sale exists
     saleRepository
         .findSaleById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Sale not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
     Sale sale = convertToEntity(saleDTO);
     Sale updatedSale = saleRepository.updateSale(id, sale);
@@ -75,7 +75,7 @@ public class SaleServiceImpl implements SaleService {
     // Verify sale exists
     saleRepository
         .findSaleById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Sale not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
     saleRepository.deleteSale(id);
   }
@@ -101,7 +101,7 @@ public class SaleServiceImpl implements SaleService {
             .orElseThrow(
                 () ->
                     new EntityNotFoundException(
-                        "Customer not found with id: " + dto.getCustomerId()));
+                        "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
 
     return sale;
