@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.SaleItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,11 +37,11 @@ public class SaleItemController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Itens de venda recuperados com sucesso",
+            description = "Itens de venda retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SaleItemDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SaleItemDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +63,7 @@ public class SaleItemController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Item de venda recuperado com sucesso",
+            description = "Item de venda retornado com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,8 +85,7 @@ public class SaleItemController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<SaleItemDTO> getSaleItemById(
-      @Parameter(description = "ID do item de venda a ser recuperado", required = true)
-          @PathVariable
+      @Parameter(description = "ID do item de venda a ser retornado", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(saleItemService.getSaleItemById(id));
   }
@@ -98,11 +98,11 @@ public class SaleItemController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Itens de venda recuperados com sucesso",
+            description = "Itens de venda retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SaleItemDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SaleItemDTO.class)))),
         @ApiResponse(
             responseCode = "404",
             description = "Venda não encontrada",
@@ -133,11 +133,11 @@ public class SaleItemController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Itens de venda contendo o produto recuperados com sucesso",
+            description = "Itens de venda contendo o produto retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SaleItemDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SaleItemDTO.class)))),
         @ApiResponse(
             responseCode = "404",
             description = "Produto não encontrado",

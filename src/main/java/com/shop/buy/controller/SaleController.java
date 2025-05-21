@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,11 +37,11 @@ public class SaleController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Vendas recuperadas com sucesso",
+            description = "Vendas retornadas com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SaleDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SaleDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +63,7 @@ public class SaleController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Venda recuperada com sucesso",
+            description = "Venda retornada com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,7 +85,7 @@ public class SaleController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<SaleDTO> getSaleById(
-      @Parameter(description = "ID da venda a ser recuperada", required = true) @PathVariable
+      @Parameter(description = "ID da venda a ser retornada", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(saleService.getSaleById(id));
   }
@@ -97,11 +98,11 @@ public class SaleController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Vendas do cliente recuperadas com sucesso",
+            description = "Vendas do cliente retornadas com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SaleDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SaleDTO.class)))),
         @ApiResponse(
             responseCode = "404",
             description = "Cliente não encontrado",
