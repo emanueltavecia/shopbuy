@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,11 +37,11 @@ public class CustomerController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Clientes recuperados com sucesso",
+            description = "Clientes retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = CustomerDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = CustomerDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +63,7 @@ public class CustomerController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Cliente recuperado com sucesso",
+            description = "Cliente retornado com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,7 +85,7 @@ public class CustomerController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<CustomerDTO> getCustomerById(
-      @Parameter(description = "ID do cliente a ser recuperado", required = true) @PathVariable
+      @Parameter(description = "ID do cliente a ser retornado", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(customerService.getCustomerById(id));
   }

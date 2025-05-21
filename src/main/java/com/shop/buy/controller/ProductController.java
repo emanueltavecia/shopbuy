@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/products")
 @Tag(name = "Produtos", description = "Endpoints para gerenciamento de produtos")
 public class ProductController {
-
   private final ProductService productService;
 
   public ProductController(ProductService productService) {
@@ -36,11 +36,11 @@ public class ProductController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Produtos recuperados com sucesso",
+            description = "Produtos retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +62,7 @@ public class ProductController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Produto recuperado com sucesso",
+            description = "Produto retornado com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,7 +84,7 @@ public class ProductController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<ProductDTO> getProductById(
-      @Parameter(description = "ID do produto a ser recuperado", required = true) @PathVariable
+      @Parameter(description = "ID do produto a ser retornado", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(productService.getProductById(id));
   }
@@ -97,11 +97,11 @@ public class ProductController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Produtos recuperados por categoria com sucesso",
+            description = "Produtos retornados por categoria com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))),
         @ApiResponse(
             responseCode = "404",
             description = "Categoria não encontrada",
@@ -133,11 +133,11 @@ public class ProductController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Produtos recuperados por marca com sucesso",
+            description = "Produtos retornados por marca com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ProductDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))),
         @ApiResponse(
             responseCode = "404",
             description = "Marca não encontrada",

@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,7 +41,7 @@ public class BrandController {
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = BrandDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",

@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,11 +37,11 @@ public class EmployeeController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Funcionários recuperados com sucesso",
+            description = "Funcionários retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = EmployeeDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = EmployeeDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +63,7 @@ public class EmployeeController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Funcionário recuperado com sucesso",
+            description = "Funcionário retornado com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,7 +85,7 @@ public class EmployeeController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<EmployeeDTO> getEmployeeById(
-      @Parameter(description = "ID do funcionário a ser recuperado", required = true) @PathVariable
+      @Parameter(description = "ID do funcionário a ser retornado", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(employeeService.getEmployeeById(id));
   }

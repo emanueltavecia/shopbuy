@@ -6,6 +6,7 @@ import com.shop.buy.exception.ErrorResponse;
 import com.shop.buy.service.SupplierService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,11 +37,11 @@ public class SupplierController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Fornecedores recuperados com sucesso",
+            description = "Fornecedores retornados com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SupplierDTO.class))),
+                    array = @ArraySchema(schema = @Schema(implementation = SupplierDTO.class)))),
         @ApiResponse(
             responseCode = "500",
             description = "Erro interno do servidor",
@@ -62,7 +63,7 @@ public class SupplierController {
       value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Fornecedor recuperado com sucesso",
+            description = "Fornecedor retornado com sucesso",
             content =
                 @Content(
                     mediaType = "application/json",
@@ -84,7 +85,7 @@ public class SupplierController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<SupplierDTO> getSupplierById(
-      @Parameter(description = "ID do fornecedor a ser recuperado", required = true) @PathVariable
+      @Parameter(description = "ID do fornecedor a ser retornado", required = true) @PathVariable
           Long id) {
     return ResponseEntity.ok(supplierService.getSupplierById(id));
   }
