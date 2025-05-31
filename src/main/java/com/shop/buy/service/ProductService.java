@@ -12,6 +12,8 @@ public interface ProductService {
 
   List<ProductDTO> getProductsByBrand(Long brandId);
 
+  List<ProductDTO> getProductsBySupplier(Long supplierId);
+
   ProductDTO createProduct(ProductDTO productDTO);
 
   ProductDTO updateProduct(Long id, ProductDTO productDTO);

@@ -33,4 +33,7 @@ public class ProductDTO {
 
   @NotNull(message = "Marca é obrigatória")
   private Long brandId;
+
+  @NotNull(message = "Fornecedor é obrigatório")
+  private Long supplierId;
 }

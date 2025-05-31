@@ -4,9 +4,11 @@ import com.shop.buy.dto.ProductDTO;
 import com.shop.buy.model.Brand;
 import com.shop.buy.model.Category;
 import com.shop.buy.model.Product;
+import com.shop.buy.model.Supplier;
 import com.shop.buy.repository.BrandRepository;
 import com.shop.buy.repository.CategoryRepository;
 import com.shop.buy.repository.ProductRepository;
+import com.shop.buy.repository.SupplierRepository;
 import com.shop.buy.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,15 +23,18 @@ public class ProductServiceImpl implements ProductService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final BrandRepository brandRepository;
+  private final SupplierRepository supplierRepository;
 
   @Autowired
   public ProductServiceImpl(
       ProductRepository productRepository,
       CategoryRepository categoryRepository,
-      BrandRepository brandRepository) {
+      BrandRepository brandRepository,
+      SupplierRepository supplierRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.brandRepository = brandRepository;
+    this.supplierRepository = supplierRepository;
   }
 
   @Override
@@ -58,6 +63,13 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<ProductDTO> getProductsByBrand(Long brandId) {
     return productRepository.findProductsByBrandId(brandId).stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<ProductDTO> getProductsBySupplier(Long supplierId) {
+    return productRepository.findProductsBySupplierId(supplierId).stream()
         .map(this::convertToDTO)
         .collect(Collectors.toList());
   }
@@ -103,6 +115,7 @@ public class ProductServiceImpl implements ProductService {
     dto.setPrice(product.getPrice());
     dto.setCategoryId(product.getCategory().getId());
     dto.setBrandId(product.getBrand().getId());
+    dto.setSupplierId(product.getSupplier().getId());
     return dto;
   }
 
@@ -120,15 +133,26 @@ public class ProductServiceImpl implements ProductService {
             .orElseThrow(
                 () ->
                     new EntityNotFoundException(
-                        "Category not found with id: " + dto.getCategoryId()));
+                        "Categoria não encontrada com id: " + dto.getCategoryId()));
     product.setCategory(category);
 
     Brand brand =
         brandRepository
             .findBrandById(dto.getBrandId())
             .orElseThrow(
-                () -> new EntityNotFoundException("Brand not found with id: " + dto.getBrandId()));
+                () ->
+                    new EntityNotFoundException(
+                        "Marca não encontrada com id: " + dto.getBrandId()));
     product.setBrand(brand);
+
+    Supplier supplier =
+        supplierRepository
+            .findSupplierById(dto.getSupplierId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Fornecedor não encontrado com id: " + dto.getSupplierId()));
+    product.setSupplier(supplier);
 
     return product;
   }

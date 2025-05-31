@@ -23,15 +23,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   @Query(value = "SELECT * FROM products WHERE brand_id = :brandId", nativeQuery = true)
   List<Product> findProductsByBrandId(@Param("brandId") Long brandId);
 
+  @Query(value = "SELECT * FROM products WHERE supplier_id = :supplierId", nativeQuery = true)
+  List<Product> findProductsBySupplierId(@Param("supplierId") Long supplierId);
+
   @Query(
       value =
-          "INSERT INTO products (name, size, color, price, category_id, brand_id) VALUES (:#{#product.name}, :#{#product.size}, :#{#product.color}, :#{#product.price}, :#{#product.category.id}, :#{#product.brand.id}) RETURNING *",
+          "INSERT INTO products (name, size, color, price, category_id, brand_id, supplier_id) VALUES (:#{#product.name}, :#{#product.size}, :#{#product.color}, :#{#product.price}, :#{#product.category.id}, :#{#product.brand.id}, :#{#product.supplier.id}) RETURNING *",
       nativeQuery = true)
   Product saveProduct(@Param("product") Product product);
 
   @Query(
       value =
-          "UPDATE products SET name = :#{#product.name}, size = :#{#product.size}, color = :#{#product.color}, price = :#{#product.price}, category_id = :#{#product.category.id}, brand_id = :#{#product.brand.id} WHERE id = :id RETURNING *",
+          "UPDATE products SET name = :#{#product.name}, size = :#{#product.size}, color = :#{#product.color}, price = :#{#product.price}, category_id = :#{#product.category.id}, brand_id = :#{#product.brand.id}, supplier_id = :#{#product.supplier.id} WHERE id = :id RETURNING *",
       nativeQuery = true)
   Product updateProduct(@Param("id") Long id, @Param("product") Product product);
 
