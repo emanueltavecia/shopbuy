@@ -18,14 +18,17 @@ public class SaleDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotNull(message = "Customer ID is required")
+  @NotNull(message = "ID do cliente é obrigatório")
   private Long customerId;
 
-  @NotNull(message = "Sale date is required")
-  @PastOrPresent(message = "Sale date cannot be in the future")
+  @NotNull(message = "ID do funcionário é obrigatório")
+  private Long employeeId;
+
+  @NotNull(message = "Data da venda é obrigatória")
+  @PastOrPresent(message = "Data da venda não pode estar no futuro")
   private LocalDateTime saleDate;
 
-  @NotNull(message = "Total value is required")
-  @Positive(message = "Total value must be positive")
+  @NotNull(message = "Valor total é obrigatório")
+  @Positive(message = "Valor total deve ser positivo")
   private BigDecimal totalValue;
 }

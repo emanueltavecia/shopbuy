@@ -10,6 +10,8 @@ public interface SaleService {
 
   List<SaleDTO> getSalesByCustomerId(Long customerId);
 
+  List<SaleDTO> getSalesByEmployeeId(Long employeeId);
+
   SaleDTO createSale(SaleDTO saleDTO);
 
   SaleDTO updateSale(Long id, SaleDTO saleDTO);

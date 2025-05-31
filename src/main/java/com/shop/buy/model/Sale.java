@@ -23,6 +23,10 @@ public class Sale {
   @JoinColumn(name = "customer_id", nullable = false)
   private Customer customer;
 
+  @ManyToOne
+  @JoinColumn(name = "employee_id", nullable = false)
+  private Employee employee;
+
   @Column(name = "sale_date", nullable = false)
   private LocalDateTime saleDate;
 

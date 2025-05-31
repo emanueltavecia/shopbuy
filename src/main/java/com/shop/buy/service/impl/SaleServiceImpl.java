@@ -2,8 +2,10 @@ package com.shop.buy.service.impl;
 
 import com.shop.buy.dto.SaleDTO;
 import com.shop.buy.model.Customer;
+import com.shop.buy.model.Employee;
 import com.shop.buy.model.Sale;
 import com.shop.buy.repository.CustomerRepository;
+import com.shop.buy.repository.EmployeeRepository;
 import com.shop.buy.repository.SaleRepository;
 import com.shop.buy.service.SaleService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,11 +20,16 @@ public class SaleServiceImpl implements SaleService {
 
   private final SaleRepository saleRepository;
   private final CustomerRepository customerRepository;
+  private final EmployeeRepository employeeRepository;
 
   @Autowired
-  public SaleServiceImpl(SaleRepository saleRepository, CustomerRepository customerRepository) {
+  public SaleServiceImpl(
+      SaleRepository saleRepository,
+      CustomerRepository customerRepository,
+      EmployeeRepository employeeRepository) {
     this.saleRepository = saleRepository;
     this.customerRepository = customerRepository;
+    this.employeeRepository = employeeRepository;
   }
 
   @Override
@@ -44,6 +51,13 @@ public class SaleServiceImpl implements SaleService {
   @Override
   public List<SaleDTO> getSalesByCustomerId(Long customerId) {
     return saleRepository.findSalesByCustomerId(customerId).stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<SaleDTO> getSalesByEmployeeId(Long employeeId) {
+    return saleRepository.findSalesByEmployeeId(employeeId).stream()
         .map(this::convertToDTO)
         .collect(Collectors.toList());
   }
@@ -84,6 +98,7 @@ public class SaleServiceImpl implements SaleService {
     SaleDTO dto = new SaleDTO();
     dto.setId(sale.getId());
     dto.setCustomerId(sale.getCustomer().getId());
+    dto.setEmployeeId(sale.getEmployee().getId());
     dto.setSaleDate(sale.getSaleDate());
     dto.setTotalValue(sale.getTotalValue());
     return dto;
@@ -103,6 +118,15 @@ public class SaleServiceImpl implements SaleService {
                     new EntityNotFoundException(
                         "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
+
+    Employee employee =
+        employeeRepository
+            .findEmployeeById(dto.getEmployeeId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Funcionário não encontrado com id: " + dto.getEmployeeId()));
+    sale.setEmployee(employee);
 
     return sale;
   }
