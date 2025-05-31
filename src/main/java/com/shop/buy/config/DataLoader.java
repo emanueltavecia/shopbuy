@@ -151,12 +151,14 @@ public class DataLoader {
       // Create sales
       Sale sale1 = new Sale();
       sale1.setCustomer(customer1);
+      sale1.setEmployee(employee1);
       sale1.setSaleDate(LocalDateTime.now().minusDays(5));
       sale1.setTotalValue(new BigDecimal("119.98"));
       saleRepository.save(sale1);
 
       Sale sale2 = new Sale();
       sale2.setCustomer(customer2);
+      sale2.setEmployee(employee2);
       sale2.setSaleDate(LocalDateTime.now().minusDays(2));
       sale2.setTotalValue(new BigDecimal("79.99"));
       saleRepository.save(sale2);

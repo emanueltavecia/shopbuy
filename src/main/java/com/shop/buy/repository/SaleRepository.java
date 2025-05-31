@@ -20,15 +20,18 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
   @Query(value = "SELECT * FROM sales WHERE customer_id = :customerId", nativeQuery = true)
   List<Sale> findSalesByCustomerId(@Param("customerId") Long customerId);
 
+  @Query(value = "SELECT * FROM sales WHERE employee_id = :employeeId", nativeQuery = true)
+  List<Sale> findSalesByEmployeeId(@Param("employeeId") Long employeeId);
+
   @Query(
       value =
-          "INSERT INTO sales (customer_id, sale_date, total_value) VALUES (:#{#sale.customer.id}, :#{#sale.saleDate}, :#{#sale.totalValue}) RETURNING *",
+          "INSERT INTO sales (customer_id, employee_id, sale_date, total_value) VALUES (:#{#sale.customer.id}, :#{#sale.employee.id}, :#{#sale.saleDate}, :#{#sale.totalValue}) RETURNING *",
       nativeQuery = true)
   Sale saveSale(@Param("sale") Sale sale);
 
   @Query(
       value =
-          "UPDATE sales SET customer_id = :#{#sale.customer.id}, sale_date = :#{#sale.saleDate}, total_value = :#{#sale.totalValue} WHERE id = :id RETURNING *",
+          "UPDATE sales SET customer_id = :#{#sale.customer.id}, employee_id = :#{#sale.employee.id}, sale_date = :#{#sale.saleDate}, total_value = :#{#sale.totalValue} WHERE id = :id RETURNING *",
       nativeQuery = true)
   Sale updateSale(@Param("id") Long id, @Param("sale") Sale sale);
 

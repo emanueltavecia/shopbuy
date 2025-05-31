@@ -126,6 +126,42 @@ public class SaleController {
   }
 
   @Operation(
+      summary = "Obter vendas por ID do funcionário",
+      description = "Retorna todas as vendas associadas a um funcionário específico",
+      tags = {"Vendas"})
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Vendas do funcionário retornadas com sucesso",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = SaleDTO.class)))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Funcionário não encontrado",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class)))
+      })
+  @GetMapping("/employee/{employeeId}")
+  public ResponseEntity<List<SaleDTO>> getSalesByEmployeeId(
+      @Parameter(description = "ID do funcionário para encontrar vendas", required = true)
+          @PathVariable
+          Long employeeId) {
+    return ResponseEntity.ok(saleService.getSalesByEmployeeId(employeeId));
+  }
+
+  @Operation(
       summary = "Criar uma nova venda",
       description = "Cria uma nova venda com os itens de venda associados",
       tags = {"Vendas"})
