@@ -16,17 +16,17 @@ public class CustomerDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Customer name cannot be blank")
+  @NotBlank(message = "Nome do cliente é obrigatório")
   private String name;
 
-  @NotBlank(message = "CPF cannot be blank")
+  @NotBlank(message = "CPF do cliente é obrigatório")
   @Pattern(
       regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$",
-      message = "CPF must be in the format XXX.XXX.XXX-XX")
+      message = "CPF deve estar no formato XXX.XXX.XXX-XX")
   private String cpf;
 
   private String phone;
 
-  @Email(message = "Email should be valid")
+  @Email(message = "Email deve ser válido")
   private String email;
 }

@@ -14,7 +14,7 @@ public class BrandDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Brand name cannot be blank")
+  @NotBlank(message = "Nome da marca é obrigatório")
   private String name;
 
   private String country;

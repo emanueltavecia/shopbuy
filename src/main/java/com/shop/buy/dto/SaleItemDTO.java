@@ -17,17 +17,17 @@ public class SaleItemDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotNull(message = "Sale ID is required")
+  @NotNull(message = "ID da venda é obrigatório")
   private Long saleId;
 
-  @NotNull(message = "Product ID is required")
+  @NotNull(message = "Produto é obrigatório")
   private Long productId;
 
-  @NotNull(message = "Quantity is required")
-  @Min(value = 1, message = "Quantity must be at least 1")
+  @NotNull(message = "Quantidade é obrigatória")
+  @Min(value = 1, message = "Quantidade deve ser pelo menos 1")
   private Integer quantity;
 
-  @NotNull(message = "Unit price is required")
-  @Positive(message = "Unit price must be positive")
+  @NotNull(message = "Preço unitário é obrigatório")
+  @Positive(message = "Preço unitário deve ser um valor positivo")
   private BigDecimal unitPrice;
 }

@@ -14,7 +14,7 @@ public class CategoryDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Category name cannot be blank")
+  @NotBlank(message = "Nome da categoria é obrigatório")
   private String name;
 
   private String description;
