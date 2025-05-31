@@ -17,20 +17,20 @@ public class ProductDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Product name cannot be blank")
+  @NotBlank(message = "Nome do produto é obrigatório")
   private String name;
 
   private String size;
 
   private String color;
 
-  @NotNull(message = "Price is required")
-  @Positive(message = "Price must be positive")
+  @NotNull(message = "Preço do produto é obrigatório")
+  @Positive(message = "Preço deve ser um valor positivo")
   private BigDecimal price;
 
-  @NotNull(message = "Category ID is required")
+  @NotNull(message = "Categoria é obrigatória")
   private Long categoryId;
 
-  @NotNull(message = "Brand ID is required")
+  @NotNull(message = "Marca é obrigatória")
   private Long brandId;
 }

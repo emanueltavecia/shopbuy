@@ -17,14 +17,14 @@ public class EmployeeDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Employee name cannot be blank")
+  @NotBlank(message = "Nome do funcionário é obrigatório")
   private String name;
 
   private String role;
 
-  @Email(message = "Email should be valid")
+  @Email(message = "Email deve ser válido")
   private String email;
 
-  @PastOrPresent(message = "Hire date cannot be in the future")
+  @PastOrPresent(message = "Data de contratação não pode estar no futuro")
   private LocalDate hireDate;
 }

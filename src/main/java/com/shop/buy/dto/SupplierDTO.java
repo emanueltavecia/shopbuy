@@ -16,17 +16,17 @@ public class SupplierDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
-  @NotBlank(message = "Supplier name cannot be blank")
+  @NotBlank(message = "Nome do fornecedor é obrigatório")
   private String name;
 
-  @NotBlank(message = "CNPJ cannot be blank")
+  @NotBlank(message = "CNPJ do fornecedor é obrigatório")
   @Pattern(
       regexp = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}\\-\\d{2}$",
-      message = "CNPJ must be in the format XX.XXX.XXX/XXXX-XX")
+      message = "CNPJ deve estar no formato XX.XXX.XXX/XXXX-XX")
   private String cnpj;
 
   private String phone;
 
-  @Email(message = "Email should be valid")
+  @Email(message = "Email deve ser válido")
   private String email;
 }
