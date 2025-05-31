@@ -75,6 +75,21 @@ public class DataLoader {
       shoes.setDescription("Calçados de todos os tipos");
       categoryRepository.save(shoes);
 
+      // Load suppliers
+      Supplier supplier1 = new Supplier();
+      supplier1.setName("Mundo dos Tecidos");
+      supplier1.setCnpj("12.345.678/0001-90");
+      supplier1.setPhone("(11) 3333-4444");
+      supplier1.setEmail("contato@mundodostecidos.com");
+      supplierRepository.save(supplier1);
+
+      Supplier supplier2 = new Supplier();
+      supplier2.setName("Soluções Têxteis");
+      supplier2.setCnpj("98.765.432/0001-10");
+      supplier2.setPhone("(11) 5555-6666");
+      supplier2.setEmail("info@solucoestexteis.com");
+      supplierRepository.save(supplier2);
+
       // Load products
       Product product1 = new Product();
       product1.setName("Camiseta Esportiva");
@@ -83,6 +98,7 @@ public class DataLoader {
       product1.setPrice(new BigDecimal("29.99"));
       product1.setCategory(shirts);
       product1.setBrand(nike);
+      product1.setSupplier(supplier1);
       productRepository.save(product1);
 
       Product product2 = new Product();
@@ -92,6 +108,7 @@ public class DataLoader {
       product2.setPrice(new BigDecimal("89.99"));
       product2.setCategory(shoes);
       product2.setBrand(adidas);
+      product2.setSupplier(supplier2);
       productRepository.save(product2);
 
       Product product3 = new Product();
@@ -101,6 +118,7 @@ public class DataLoader {
       product3.setPrice(new BigDecimal("79.99"));
       product3.setCategory(pants);
       product3.setBrand(puma);
+      product3.setSupplier(supplier1);
       productRepository.save(product3);
 
       // Load customers
@@ -132,21 +150,6 @@ public class DataLoader {
       employee2.setEmail("sara.almeida@loja.com");
       employee2.setHireDate(LocalDate.of(2021, 3, 10));
       employeeRepository.save(employee2);
-
-      // Load suppliers
-      Supplier supplier1 = new Supplier();
-      supplier1.setName("Mundo dos Tecidos");
-      supplier1.setCnpj("12.345.678/0001-90");
-      supplier1.setPhone("(11) 3333-4444");
-      supplier1.setEmail("contato@mundodostecidos.com");
-      supplierRepository.save(supplier1);
-
-      Supplier supplier2 = new Supplier();
-      supplier2.setName("Soluções Têxteis");
-      supplier2.setCnpj("98.765.432/0001-10");
-      supplier2.setPhone("(11) 5555-6666");
-      supplier2.setEmail("info@solucoestexteis.com");
-      supplierRepository.save(supplier2);
 
       // Create sales
       Sale sale1 = new Sale();

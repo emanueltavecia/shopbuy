@@ -161,6 +161,42 @@ public class ProductController {
   }
 
   @Operation(
+      summary = "Obter produtos por fornecedor",
+      description = "Retorna todos os produtos pertencentes a um fornecedor específico",
+      tags = {"Produtos"})
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Produtos retornados por fornecedor com sucesso",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Fornecedor não encontrado",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorResponse.class)))
+      })
+  @GetMapping("/search/supplier/{supplierId}")
+  public ResponseEntity<List<ProductDTO>> getProductsBySupplier(
+      @Parameter(description = "ID do fornecedor para filtrar produtos", required = true)
+          @PathVariable
+          Long supplierId) {
+    return ResponseEntity.ok(productService.getProductsBySupplier(supplierId));
+  }
+
+  @Operation(
       summary = "Criar um novo produto",
       description = "Cria um novo produto",
       tags = {"Produtos"})
