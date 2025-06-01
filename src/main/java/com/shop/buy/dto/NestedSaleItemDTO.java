@@ -14,18 +14,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NestedSaleItemDTO {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
 
-    @NotNull(message = "Produto é obrigatório")
-    private Long productId;
+  @NotNull(message = "Produto é obrigatório")
+  private Long productId;
 
-    @NotNull(message = "Quantidade é obrigatória")
-    @Min(value = 1, message = "Quantidade deve ser pelo menos 1")
-    @Positive(message = "Quantidade deve ser um valor positivo")
-    private Integer quantity;
+  @NotNull(message = "Quantidade é obrigatória")
+  @Min(value = 1, message = "Quantidade deve ser pelo menos 1")
+  @Positive(message = "Quantidade deve ser um valor positivo")
+  private Integer quantity;
 
-    @NotNull(message = "Preço unitário é obrigatório")
-    @Positive(message = "Preço unitário deve ser um valor positivo")
-    private BigDecimal unitPrice;
+  @NotNull(message = "Preço unitário é obrigatório")
+  @Positive(message = "Preço unitário deve ser um valor positivo")
+  private BigDecimal unitPrice;
 }

@@ -15,22 +15,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DirectSaleItemDTO {
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Long id;
 
-    @Schema(description = "ID da venda. Obrigatório apenas ao criar/editar um item diretamente.", accessMode = Schema.AccessMode.AUTO, requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(groups = ValidationGroups.DirectSaleItemOperation.class, message = "ID da venda é obrigatório ao criar/editar um item diretamente.")
-    private Long saleId;
+  @Schema(
+      description = "ID da venda. Obrigatório apenas ao criar/editar um item diretamente.",
+      accessMode = Schema.AccessMode.AUTO,
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull(
+      groups = ValidationGroups.DirectSaleItemOperation.class,
+      message = "ID da venda é obrigatório ao criar/editar um item diretamente.")
+  private Long saleId;
 
-    @NotNull(message = "Produto é obrigatório")
-    private Long productId;
+  @NotNull(message = "Produto é obrigatório")
+  private Long productId;
 
-    @NotNull(message = "Quantidade é obrigatória")
-    @Min(value = 1, message = "Quantidade deve ser pelo menos 1")
-    @Positive(message = "Quantidade deve ser um valor positivo")
-    private Integer quantity;
+  @NotNull(message = "Quantidade é obrigatória")
+  @Min(value = 1, message = "Quantidade deve ser pelo menos 1")
+  @Positive(message = "Quantidade deve ser um valor positivo")
+  private Integer quantity;
 
-    @NotNull(message = "Preço unitário é obrigatório")
-    @Positive(message = "Preço unitário deve ser um valor positivo")
-    private BigDecimal unitPrice;
+  @NotNull(message = "Preço unitário é obrigatório")
+  @Positive(message = "Preço unitário deve ser um valor positivo")
+  private BigDecimal unitPrice;
 }
