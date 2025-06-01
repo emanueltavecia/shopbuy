@@ -166,7 +166,7 @@ public class SaleController {
   @Operation(
       summary = "Criar uma nova venda",
       description =
-          "Cria uma nova venda com os itens de venda associados. A lista de itens é obrigatória. Nota: Não é necessário informar o campo saleId nos itens da venda.",
+          "Cria uma nova venda com os itens de venda associados. A lista de itens é obrigatória.",
       tags = {"Vendas"})
   @ApiResponses(
       value = {
@@ -213,7 +213,7 @@ public class SaleController {
   @Operation(
       summary = "Atualizar uma venda existente",
       description =
-          "Atualiza as informações de uma venda existente com base no ID fornecido. A lista de itens é obrigatória e substituirá todos os itens existentes. Nota: Não é necessário informar o campo saleId nos itens da venda.",
+          "Atualiza as informações de uma venda existente com base no ID fornecido. A lista de itens é obrigatória e substituirá todos os itens existentes.",
       tags = {"Vendas"})
   @ApiResponses(
       value = {
