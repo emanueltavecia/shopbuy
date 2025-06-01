@@ -1,7 +1,7 @@
 package com.shop.buy.service.impl;
 
-import com.shop.buy.dto.SaleDTO;
 import com.shop.buy.dto.NestedSaleItemDTO;
+import com.shop.buy.dto.SaleDTO;
 import com.shop.buy.model.Customer;
 import com.shop.buy.model.Employee;
 import com.shop.buy.model.Product;
@@ -54,9 +54,10 @@ public class SaleServiceImpl implements SaleService {
 
   @Override
   public SaleDTO getSaleById(Long id) {
-    Sale sale = saleRepository
-        .findSaleById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    Sale sale =
+        saleRepository
+            .findSaleById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
     return convertToDTO(sale);
   }
 
@@ -80,16 +81,16 @@ public class SaleServiceImpl implements SaleService {
     Sale sale = convertToEntity(saleDTO);
     Sale savedSale = saleRepository.saveSale(sale);
 
-    // Create and save sale items
     if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty()) {
       List<SaleItem> items = createSaleItems(saleDTO.getItems(), savedSale);
       for (SaleItem item : items) {
         saleItemRepository.saveSaleItem(item);
       }
 
-      // Fetch the complete sale with items
-      savedSale = saleRepository.findSaleById(savedSale.getId())
-          .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
+      savedSale =
+          saleRepository
+              .findSaleById(savedSale.getId())
+              .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
     }
 
     return convertToDTO(savedSale);
@@ -98,22 +99,19 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
-    // Verify sale exists
+
     saleRepository
         .findSaleById(id)
         .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
-    // Delete existing sale items
     List<SaleItem> existingItems = saleItemRepository.findSaleItemsBySaleId(id);
     for (SaleItem item : existingItems) {
       saleItemRepository.deleteSaleItem(item.getId());
     }
 
-    // Update the sale
     Sale sale = convertToEntity(saleDTO);
     Sale updatedSale = saleRepository.updateSale(id, sale);
 
-    // Create new sale items
     List<SaleItem> savedItems = createSaleItems(saleDTO.getItems(), updatedSale);
     updatedSale.setItems(savedItems);
 
@@ -141,20 +139,26 @@ public class SaleServiceImpl implements SaleService {
 
     if (itemDTOs != null && !itemDTOs.isEmpty()) {
       for (NestedSaleItemDTO itemDTO : itemDTOs) {
-        // Validação adicional de itens
+
         if (itemDTO.getProductId() == null) {
           throw new IllegalArgumentException("Produto é obrigatório para todos os itens da venda");
         }
         if (itemDTO.getQuantity() == null || itemDTO.getQuantity() < 1) {
           throw new IllegalArgumentException("Quantidade deve ser informada e ser pelo menos 1");
         }
-        if (itemDTO.getUnitPrice() == null || itemDTO.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
-          throw new IllegalArgumentException("Preço unitário deve ser informado e ser um valor positivo");
+        if (itemDTO.getUnitPrice() == null
+            || itemDTO.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
+          throw new IllegalArgumentException(
+              "Preço unitário deve ser informado e ser um valor positivo");
         }
 
-        Product product = productRepository.findProductById(itemDTO.getProductId())
-            .orElseThrow(() -> new EntityNotFoundException(
-                "Produto não encontrado com id: " + itemDTO.getProductId()));
+        Product product =
+            productRepository
+                .findProductById(itemDTO.getProductId())
+                .orElseThrow(
+                    () ->
+                        new EntityNotFoundException(
+                            "Produto não encontrado com id: " + itemDTO.getProductId()));
 
         SaleItem saleItem = new SaleItem();
         saleItem.setSale(sale);
@@ -178,9 +182,7 @@ public class SaleServiceImpl implements SaleService {
 
     if (sale.getItems() != null) {
       dto.setItems(
-          sale.getItems().stream()
-              .map(this::convertToSaleItemDTO)
-              .collect(Collectors.toList()));
+          sale.getItems().stream().map(this::convertToSaleItemDTO).collect(Collectors.toList()));
     }
     return dto;
   }
@@ -200,18 +202,22 @@ public class SaleServiceImpl implements SaleService {
     sale.setSaleDate(dto.getSaleDate());
     sale.setTotalValue(dto.getTotalValue());
 
-    Customer customer = customerRepository
-        .findCustomerById(dto.getCustomerId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Cliente não encontrado com id: " + dto.getCustomerId()));
+    Customer customer =
+        customerRepository
+            .findCustomerById(dto.getCustomerId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
 
-    Employee employee = employeeRepository
-        .findEmployeeById(dto.getEmployeeId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Funcionário não encontrado com id: " + dto.getEmployeeId()));
+    Employee employee =
+        employeeRepository
+            .findEmployeeById(dto.getEmployeeId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Funcionário não encontrado com id: " + dto.getEmployeeId()));
     sale.setEmployee(employee);
 
     return sale;

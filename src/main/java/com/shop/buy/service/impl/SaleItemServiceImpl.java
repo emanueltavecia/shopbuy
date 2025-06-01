@@ -41,10 +41,11 @@ public class SaleItemServiceImpl implements SaleItemService {
 
   @Override
   public DirectSaleItemDTO getSaleItemById(Long id) {
-    SaleItem saleItem = saleItemRepository
-        .findSaleItemById(id)
-        .orElseThrow(
-            () -> new EntityNotFoundException("Item de venda não encontrado com id: " + id));
+    SaleItem saleItem =
+        saleItemRepository
+            .findSaleItemById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException("Item de venda não encontrado com id: " + id));
     return convertToDTO(saleItem);
   }
 
@@ -65,7 +66,6 @@ public class SaleItemServiceImpl implements SaleItemService {
   @Override
   @Transactional
   public DirectSaleItemDTO createSaleItem(DirectSaleItemDTO saleItemDTO) {
-    // Validation of saleId is now handled by validation groups
     SaleItem saleItem = convertToEntity(saleItemDTO);
     SaleItem savedSaleItem = saleItemRepository.saveSaleItem(saleItem);
     return convertToDTO(savedSaleItem);
@@ -113,21 +113,24 @@ public class SaleItemServiceImpl implements SaleItemService {
     saleItem.setQuantity(dto.getQuantity());
     saleItem.setUnitPrice(dto.getUnitPrice());
 
-    // Only set sale if saleId is provided (will be null for items in a new sale)
     if (dto.getSaleId() != null) {
-      Sale sale = saleRepository
-          .findSaleById(dto.getSaleId())
-          .orElseThrow(
-              () -> new EntityNotFoundException(
-                  "Venda não encontrada com id: " + dto.getSaleId()));
+      Sale sale =
+          saleRepository
+              .findSaleById(dto.getSaleId())
+              .orElseThrow(
+                  () ->
+                      new EntityNotFoundException(
+                          "Venda não encontrada com id: " + dto.getSaleId()));
       saleItem.setSale(sale);
     }
 
-    Product product = productRepository
-        .findProductById(dto.getProductId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Produto não encontrado com id: " + dto.getProductId()));
+    Product product =
+        productRepository
+            .findProductById(dto.getProductId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Produto não encontrado com id: " + dto.getProductId()));
     saleItem.setProduct(product);
 
     return saleItem;
