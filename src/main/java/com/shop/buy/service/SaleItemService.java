@@ -1,20 +1,20 @@
 package com.shop.buy.service;
 
-import com.shop.buy.dto.SaleItemDTO;
+import com.shop.buy.dto.DirectSaleItemDTO;
 import java.util.List;
 
 public interface SaleItemService {
-  List<SaleItemDTO> getAllSaleItems();
+  List<DirectSaleItemDTO> getAllSaleItems();
 
-  SaleItemDTO getSaleItemById(Long id);
+  DirectSaleItemDTO getSaleItemById(Long id);
 
-  List<SaleItemDTO> getSaleItemsBySaleId(Long saleId);
+  List<DirectSaleItemDTO> getSaleItemsBySaleId(Long saleId);
 
-  List<SaleItemDTO> getSaleItemsByProductId(Long productId);
+  List<DirectSaleItemDTO> getSaleItemsByProductId(Long productId);
 
-  SaleItemDTO createSaleItem(SaleItemDTO saleItemDTO);
+  DirectSaleItemDTO createSaleItem(DirectSaleItemDTO saleItemDTO);
 
-  SaleItemDTO updateSaleItem(Long id, SaleItemDTO saleItemDTO);
+  DirectSaleItemDTO updateSaleItem(Long id, DirectSaleItemDTO saleItemDTO);
 
   void deleteSaleItem(Long id);
 }

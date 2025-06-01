@@ -1,11 +1,14 @@
 package com.shop.buy.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,4 +34,10 @@ public class SaleDTO {
   @NotNull(message = "Valor total é obrigatório")
   @Positive(message = "Valor total deve ser um valor positivo")
   private BigDecimal totalValue;
+
+  @NotNull(message = "Itens da venda são obrigatórios")
+  @NotEmpty(message = "A venda deve conter pelo menos um item")
+  @Valid
+  @Schema(description = "Lista de itens da venda.")
+  private List<NestedSaleItemDTO> items;
 }

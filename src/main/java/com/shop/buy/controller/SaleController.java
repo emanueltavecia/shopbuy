@@ -16,11 +16,13 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/sales")
 @Tag(name = "Vendas", description = "Endpoints para gerenciamento de vendas")
+@Validated
 public class SaleController {
 
   private final SaleService saleService;
@@ -163,7 +165,8 @@ public class SaleController {
 
   @Operation(
       summary = "Criar uma nova venda",
-      description = "Cria uma nova venda com os itens de venda associados",
+      description =
+          "Cria uma nova venda com os itens de venda associados. A lista de itens é obrigatória. Nota: Não é necessário informar o campo saleId nos itens da venda.",
       tags = {"Vendas"})
   @ApiResponses(
       value = {
@@ -199,7 +202,7 @@ public class SaleController {
   @PostMapping
   public ResponseEntity<SaleDTO> createSale(
       @Parameter(
-              description = "Detalhes da venda para criação incluindo itens de venda",
+              description = "Detalhes da venda para criação incluindo itens de venda (obrigatório)",
               required = true)
           @Valid
           @RequestBody
@@ -209,7 +212,8 @@ public class SaleController {
 
   @Operation(
       summary = "Atualizar uma venda existente",
-      description = "Atualiza as informações de uma venda existente com base no ID fornecido",
+      description =
+          "Atualiza as informações de uma venda existente com base no ID fornecido. A lista de itens é obrigatória e substituirá todos os itens existentes. Nota: Não é necessário informar o campo saleId nos itens da venda.",
       tags = {"Vendas"})
   @ApiResponses(
       value = {
@@ -246,7 +250,9 @@ public class SaleController {
   public ResponseEntity<SaleDTO> updateSale(
       @Parameter(description = "ID da venda a ser atualizada", required = true) @PathVariable
           Long id,
-      @Parameter(description = "Informações atualizadas da venda", required = true)
+      @Parameter(
+              description = "Informações atualizadas da venda incluindo itens (obrigatório)",
+              required = true)
           @Valid
           @RequestBody
           SaleDTO saleDTO) {
