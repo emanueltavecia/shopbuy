@@ -1,15 +1,13 @@
 package com.shop.buy.dto;
 
+import com.shop.buy.model.Brand;
+import com.shop.buy.model.Category;
+import com.shop.buy.model.Supplier;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
-
-import com.shop.buy.model.Brand;
-import com.shop.buy.model.Category;
-import com.shop.buy.model.Supplier;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +33,7 @@ public class ProductDTO {
 
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Category category;
- 
+
   @NotNull(message = "Categoria é obrigatória")
   private Long categoryId;
 

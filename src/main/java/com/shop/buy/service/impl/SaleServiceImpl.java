@@ -4,6 +4,7 @@ import com.shop.buy.dto.NestedSaleItemDTO;
 import com.shop.buy.dto.SaleDTO;
 import com.shop.buy.model.Customer;
 import com.shop.buy.model.Employee;
+import com.shop.buy.model.PaymentMethod;
 import com.shop.buy.model.Product;
 import com.shop.buy.model.Sale;
 import com.shop.buy.model.SaleItem;
@@ -54,9 +55,10 @@ public class SaleServiceImpl implements SaleService {
 
   @Override
   public SaleDTO getSaleById(Long id) {
-    Sale sale = saleRepository
-        .findSaleById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    Sale sale =
+        saleRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
     return convertToDTO(sale);
   }
 
@@ -78,12 +80,19 @@ public class SaleServiceImpl implements SaleService {
   @Transactional
   public SaleDTO createSale(SaleDTO saleDTO) {
     // Verificar se o desconto é válido
-    if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty() && saleDTO.getDiscount() != null) {
+    if (saleDTO.getItems() != null
+        && !saleDTO.getItems().isEmpty()
+        && saleDTO.getDiscount() != null) {
       validateDiscount(saleDTO);
     }
 
     Sale sale = convertToEntity(saleDTO);
-    Sale savedSale = saleRepository.saveSale(sale);
+
+    if (sale.getPaymentMethod() == null) {
+      throw new IllegalArgumentException("Método de pagamento é obrigatório");
+    }
+
+    Sale savedSale = saleRepository.save(sale);
 
     if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty()) {
       List<SaleItem> items = createSaleItems(saleDTO.getItems(), savedSale);
@@ -91,9 +100,10 @@ public class SaleServiceImpl implements SaleService {
         saleItemRepository.saveSaleItem(item);
       }
 
-      savedSale = saleRepository
-          .findSaleById(savedSale.getId())
-          .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
+      savedSale =
+          saleRepository
+              .findById(savedSale.getId())
+              .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
     }
 
     return convertToDTO(savedSale);
@@ -102,13 +112,15 @@ public class SaleServiceImpl implements SaleService {
   private void validateDiscount(SaleDTO saleDTO) {
     BigDecimal subtotal = BigDecimal.ZERO;
     if (saleDTO.getItems() != null) {
-      subtotal = saleDTO.getItems().stream()
-          .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-          .reduce(BigDecimal.ZERO, BigDecimal::add);
+      subtotal =
+          saleDTO.getItems().stream()
+              .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+              .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     if (saleDTO.getDiscount() != null && saleDTO.getDiscount().compareTo(subtotal) > 0) {
-      throw new IllegalArgumentException("O desconto não pode ser maior que o valor total dos itens");
+      throw new IllegalArgumentException(
+          "O desconto não pode ser maior que o valor total dos itens");
     }
   }
 
@@ -116,13 +128,16 @@ public class SaleServiceImpl implements SaleService {
   @Transactional
   public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
     // Verificar se o desconto é válido
-    if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty() && saleDTO.getDiscount() != null) {
+    if (saleDTO.getItems() != null
+        && !saleDTO.getItems().isEmpty()
+        && saleDTO.getDiscount() != null) {
       validateDiscount(saleDTO);
     }
 
-    saleRepository
-        .findSaleById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    Sale existingSale =
+        saleRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
     List<SaleItem> existingItems = saleItemRepository.findSaleItemsBySaleId(id);
     for (SaleItem item : existingItems) {
@@ -130,7 +145,13 @@ public class SaleServiceImpl implements SaleService {
     }
 
     Sale sale = convertToEntity(saleDTO);
-    Sale updatedSale = saleRepository.updateSale(id, sale);
+    sale.setId(id);
+
+    if (sale.getPaymentMethod() == null) {
+      throw new IllegalArgumentException("Método de pagamento é obrigatório");
+    }
+
+    Sale updatedSale = saleRepository.save(sale);
 
     List<SaleItem> savedItems = createSaleItems(saleDTO.getItems(), updatedSale);
     updatedSale.setItems(savedItems);
@@ -143,7 +164,7 @@ public class SaleServiceImpl implements SaleService {
   public void deleteSale(Long id) {
 
     saleRepository
-        .findSaleById(id)
+        .findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
     List<SaleItem> items = saleItemRepository.findSaleItemsBySaleId(id);
@@ -172,11 +193,13 @@ public class SaleServiceImpl implements SaleService {
               "Preço unitário deve ser informado e ser um valor positivo");
         }
 
-        Product product = productRepository
-            .findProductById(itemDTO.getProductId())
-            .orElseThrow(
-                () -> new EntityNotFoundException(
-                    "Produto não encontrado com id: " + itemDTO.getProductId()));
+        Product product =
+            productRepository
+                .findProductById(itemDTO.getProductId())
+                .orElseThrow(
+                    () ->
+                        new EntityNotFoundException(
+                            "Produto não encontrado com id: " + itemDTO.getProductId()));
 
         SaleItem saleItem = new SaleItem();
         saleItem.setSale(sale);
@@ -197,6 +220,9 @@ public class SaleServiceImpl implements SaleService {
     dto.setEmployeeId(sale.getEmployee().getId());
     dto.setSaleDate(sale.getSaleDate());
     dto.setDiscount(sale.getDiscount());
+    if (sale.getPaymentMethod() != null) {
+      dto.setPaymentMethod(sale.getPaymentMethod().name());
+    }
 
     // Calcular o valor total a partir dos itens de venda
     BigDecimal totalValue = calculateTotalValue(sale);
@@ -214,9 +240,10 @@ public class SaleServiceImpl implements SaleService {
       return BigDecimal.ZERO;
     }
 
-    BigDecimal total = sale.getItems().stream()
-        .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal total =
+        sale.getItems().stream()
+            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     // Aplicar desconto se houver
     if (sale.getDiscount() != null) {
@@ -245,18 +272,35 @@ public class SaleServiceImpl implements SaleService {
     sale.setSaleDate(dto.getSaleDate());
     sale.setDiscount(dto.getDiscount());
 
-    Customer customer = customerRepository
-        .findCustomerById(dto.getCustomerId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Cliente não encontrado com id: " + dto.getCustomerId()));
+    if (dto.getPaymentMethod() != null && !dto.getPaymentMethod().isEmpty()) {
+      try {
+        sale.setPaymentMethod(PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase()));
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Método de pagamento inválido: "
+                + dto.getPaymentMethod()
+                + ". Valores válidos: CREDIT_CARD, BANK_SLIP, PIX");
+      }
+    } else {
+      throw new IllegalArgumentException("Método de pagamento é obrigatório");
+    }
+
+    Customer customer =
+        customerRepository
+            .findCustomerById(dto.getCustomerId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
 
-    Employee employee = employeeRepository
-        .findEmployeeById(dto.getEmployeeId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Funcionário não encontrado com id: " + dto.getEmployeeId()));
+    Employee employee =
+        employeeRepository
+            .findEmployeeById(dto.getEmployeeId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Funcionário não encontrado com id: " + dto.getEmployeeId()));
     sale.setEmployee(employee);
 
     return sale;

@@ -33,8 +33,11 @@ public class Sale {
   @Column(name = "discount")
   private BigDecimal discount;
 
-  @Transient
-  private BigDecimal totalValue;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "payment_method", nullable = false)
+  private PaymentMethod paymentMethod;
+
+  @Transient private BigDecimal totalValue;
 
   @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
   private List<SaleItem> items;

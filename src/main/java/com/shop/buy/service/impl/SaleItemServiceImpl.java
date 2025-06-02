@@ -116,7 +116,7 @@ public class SaleItemServiceImpl implements SaleItemService {
     if (dto.getSaleId() != null) {
       Sale sale =
           saleRepository
-              .findSaleById(dto.getSaleId())
+              .findById(dto.getSaleId())
               .orElseThrow(
                   () ->
                       new EntityNotFoundException(

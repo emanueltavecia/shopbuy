@@ -3,6 +3,7 @@ package com.shop.buy.controller;
 import com.shop.buy.dto.SaleDTO;
 import com.shop.buy.dto.SuccessResponse;
 import com.shop.buy.exception.ErrorResponse;
+import com.shop.buy.model.PaymentMethod;
 import com.shop.buy.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -207,6 +208,17 @@ public class SaleController {
           @Valid
           @RequestBody
           SaleDTO saleDTO) {
+    // Validação adicional do método de pagamento
+    if (saleDTO.getPaymentMethod() != null) {
+      try {
+        PaymentMethod.valueOf(saleDTO.getPaymentMethod().toUpperCase());
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Método de pagamento inválido: "
+                + saleDTO.getPaymentMethod()
+                + ". Valores válidos: CREDIT_CARD, BANK_SLIP, PIX");
+      }
+    }
     return new ResponseEntity<>(saleService.createSale(saleDTO), HttpStatus.CREATED);
   }
 
@@ -256,6 +268,17 @@ public class SaleController {
           @Valid
           @RequestBody
           SaleDTO saleDTO) {
+    // Validação adicional do método de pagamento
+    if (saleDTO.getPaymentMethod() != null) {
+      try {
+        PaymentMethod.valueOf(saleDTO.getPaymentMethod().toUpperCase());
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Método de pagamento inválido: "
+                + saleDTO.getPaymentMethod()
+                + ". Valores válidos: CREDIT_CARD, BANK_SLIP, PIX");
+      }
+    }
     return ResponseEntity.ok(saleService.updateSale(id, saleDTO));
   }
 

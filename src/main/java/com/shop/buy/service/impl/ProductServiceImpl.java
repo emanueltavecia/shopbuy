@@ -46,9 +46,10 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductDTO getProductById(Long id) {
-    Product product = productRepository
-        .findProductById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
+    Product product =
+        productRepository
+            .findProductById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
     return convertToDTO(product);
   }
 
@@ -128,25 +129,31 @@ public class ProductServiceImpl implements ProductService {
     product.setColor(dto.getColor());
     product.setPrice(dto.getPrice());
 
-    Category category = categoryRepository
-        .findCategoryById(dto.getCategoryId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Categoria não encontrada com id: " + dto.getCategoryId()));
+    Category category =
+        categoryRepository
+            .findCategoryById(dto.getCategoryId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Categoria não encontrada com id: " + dto.getCategoryId()));
     product.setCategory(category);
 
-    Brand brand = brandRepository
-        .findBrandById(dto.getBrandId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Marca não encontrada com id: " + dto.getBrandId()));
+    Brand brand =
+        brandRepository
+            .findBrandById(dto.getBrandId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Marca não encontrada com id: " + dto.getBrandId()));
     product.setBrand(brand);
 
-    Supplier supplier = supplierRepository
-        .findSupplierById(dto.getSupplierId())
-        .orElseThrow(
-            () -> new EntityNotFoundException(
-                "Fornecedor não encontrado com id: " + dto.getSupplierId()));
+    Supplier supplier =
+        supplierRepository
+            .findSupplierById(dto.getSupplierId())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        "Fornecedor não encontrado com id: " + dto.getSupplierId()));
     product.setSupplier(supplier);
 
     return product;
