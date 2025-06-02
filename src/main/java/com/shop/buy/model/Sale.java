@@ -30,7 +30,10 @@ public class Sale {
   @Column(name = "sale_date", nullable = false)
   private LocalDateTime saleDate;
 
-  @Column(name = "total_value", nullable = false)
+  @Column(name = "discount")
+  private BigDecimal discount;
+
+  @Transient
   private BigDecimal totalValue;
 
   @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)

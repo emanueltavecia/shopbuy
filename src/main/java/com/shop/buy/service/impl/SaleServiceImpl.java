@@ -54,10 +54,9 @@ public class SaleServiceImpl implements SaleService {
 
   @Override
   public SaleDTO getSaleById(Long id) {
-    Sale sale =
-        saleRepository
-            .findSaleById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    Sale sale = saleRepository
+        .findSaleById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
     return convertToDTO(sale);
   }
 
@@ -78,6 +77,11 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public SaleDTO createSale(SaleDTO saleDTO) {
+    // Verificar se o desconto é válido
+    if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty() && saleDTO.getDiscount() != null) {
+      validateDiscount(saleDTO);
+    }
+
     Sale sale = convertToEntity(saleDTO);
     Sale savedSale = saleRepository.saveSale(sale);
 
@@ -87,18 +91,34 @@ public class SaleServiceImpl implements SaleService {
         saleItemRepository.saveSaleItem(item);
       }
 
-      savedSale =
-          saleRepository
-              .findSaleById(savedSale.getId())
-              .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
+      savedSale = saleRepository
+          .findSaleById(savedSale.getId())
+          .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
     }
 
     return convertToDTO(savedSale);
   }
 
+  private void validateDiscount(SaleDTO saleDTO) {
+    BigDecimal subtotal = BigDecimal.ZERO;
+    if (saleDTO.getItems() != null) {
+      subtotal = saleDTO.getItems().stream()
+          .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+          .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    if (saleDTO.getDiscount() != null && saleDTO.getDiscount().compareTo(subtotal) > 0) {
+      throw new IllegalArgumentException("O desconto não pode ser maior que o valor total dos itens");
+    }
+  }
+
   @Override
   @Transactional
   public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
+    // Verificar se o desconto é válido
+    if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty() && saleDTO.getDiscount() != null) {
+      validateDiscount(saleDTO);
+    }
 
     saleRepository
         .findSaleById(id)
@@ -152,13 +172,11 @@ public class SaleServiceImpl implements SaleService {
               "Preço unitário deve ser informado e ser um valor positivo");
         }
 
-        Product product =
-            productRepository
-                .findProductById(itemDTO.getProductId())
-                .orElseThrow(
-                    () ->
-                        new EntityNotFoundException(
-                            "Produto não encontrado com id: " + itemDTO.getProductId()));
+        Product product = productRepository
+            .findProductById(itemDTO.getProductId())
+            .orElseThrow(
+                () -> new EntityNotFoundException(
+                    "Produto não encontrado com id: " + itemDTO.getProductId()));
 
         SaleItem saleItem = new SaleItem();
         saleItem.setSale(sale);
@@ -178,13 +196,38 @@ public class SaleServiceImpl implements SaleService {
     dto.setCustomerId(sale.getCustomer().getId());
     dto.setEmployeeId(sale.getEmployee().getId());
     dto.setSaleDate(sale.getSaleDate());
-    dto.setTotalValue(sale.getTotalValue());
+    dto.setDiscount(sale.getDiscount());
+
+    // Calcular o valor total a partir dos itens de venda
+    BigDecimal totalValue = calculateTotalValue(sale);
+    dto.setTotalValue(totalValue);
 
     if (sale.getItems() != null) {
       dto.setItems(
           sale.getItems().stream().map(this::convertToSaleItemDTO).collect(Collectors.toList()));
     }
     return dto;
+  }
+
+  private BigDecimal calculateTotalValue(Sale sale) {
+    if (sale.getItems() == null || sale.getItems().isEmpty()) {
+      return BigDecimal.ZERO;
+    }
+
+    BigDecimal total = sale.getItems().stream()
+        .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    // Aplicar desconto se houver
+    if (sale.getDiscount() != null) {
+      total = total.subtract(sale.getDiscount());
+      // Garantir que o valor não seja negativo
+      if (total.compareTo(BigDecimal.ZERO) < 0) {
+        total = BigDecimal.ZERO;
+      }
+    }
+
+    return total;
   }
 
   private NestedSaleItemDTO convertToSaleItemDTO(SaleItem saleItem) {
@@ -200,24 +243,20 @@ public class SaleServiceImpl implements SaleService {
     Sale sale = new Sale();
     sale.setId(dto.getId());
     sale.setSaleDate(dto.getSaleDate());
-    sale.setTotalValue(dto.getTotalValue());
+    sale.setDiscount(dto.getDiscount());
 
-    Customer customer =
-        customerRepository
-            .findCustomerById(dto.getCustomerId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Cliente não encontrado com id: " + dto.getCustomerId()));
+    Customer customer = customerRepository
+        .findCustomerById(dto.getCustomerId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
 
-    Employee employee =
-        employeeRepository
-            .findEmployeeById(dto.getEmployeeId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Funcionário não encontrado com id: " + dto.getEmployeeId()));
+    Employee employee = employeeRepository
+        .findEmployeeById(dto.getEmployeeId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Funcionário não encontrado com id: " + dto.getEmployeeId()));
     sale.setEmployee(employee);
 
     return sale;
