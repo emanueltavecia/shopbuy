@@ -157,6 +157,7 @@ public class DataLoader {
       sale1.setEmployee(employee1);
       sale1.setSaleDate(LocalDateTime.now().minusDays(5));
       sale1.setDiscount(new BigDecimal("10.00"));
+      sale1.setPaymentMethod(PaymentMethod.CREDIT_CARD);
       saleRepository.save(sale1);
 
       Sale sale2 = new Sale();
@@ -164,6 +165,7 @@ public class DataLoader {
       sale2.setEmployee(employee2);
       sale2.setSaleDate(LocalDateTime.now().minusDays(2));
       sale2.setDiscount(new BigDecimal("5.00"));
+      sale2.setPaymentMethod(PaymentMethod.PIX);
       saleRepository.save(sale2);
 
       // Create sale items

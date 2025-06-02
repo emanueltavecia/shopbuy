@@ -31,11 +31,17 @@ public class SaleDTO {
   @PastOrPresent(message = "Data da venda não pode estar no futuro")
   private LocalDateTime saleDate;
 
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Valor total calculado a partir dos itens da venda")
+  @Schema(
+      accessMode = Schema.AccessMode.READ_ONLY,
+      description = "Valor total calculado a partir dos itens da venda")
   private BigDecimal totalValue;
 
   @Positive(message = "Desconto deve ser um valor positivo")
   private BigDecimal discount;
+
+  @Schema(description = "Método de pagamento (CREDIT_CARD, BANK_SLIP, PIX).")
+  @NotNull(message = "Método de pagamento é obrigatório")
+  private String paymentMethod;
 
   @NotNull(message = "Itens da venda são obrigatórios")
   @NotEmpty(message = "A venda deve conter pelo menos um item")
