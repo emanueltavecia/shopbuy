@@ -46,10 +46,9 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductDTO getProductById(Long id) {
-    Product product =
-        productRepository
-            .findProductById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
+    Product product = productRepository
+        .findProductById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
     return convertToDTO(product);
   }
 
@@ -78,32 +77,31 @@ public class ProductServiceImpl implements ProductService {
   @Transactional
   public ProductDTO createProduct(ProductDTO productDTO) {
     Product product = convertToEntity(productDTO);
-    Product savedProduct = productRepository.saveProduct(product);
+    Product savedProduct = productRepository.save(product);
     return convertToDTO(savedProduct);
   }
 
   @Override
   @Transactional
   public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-
     productRepository
         .findProductById(id)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
 
     Product product = convertToEntity(productDTO);
-    Product updatedProduct = productRepository.updateProduct(id, product);
+    product.setId(id); // Ensure ID is set for update
+    Product updatedProduct = productRepository.save(product);
     return convertToDTO(updatedProduct);
   }
 
   @Override
   @Transactional
   public void deleteProduct(Long id) {
-
     productRepository
         .findProductById(id)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
 
-    productRepository.deleteProduct(id);
+    productRepository.deleteById(id);
   }
 
   private ProductDTO convertToDTO(Product product) {
@@ -113,8 +111,11 @@ public class ProductServiceImpl implements ProductService {
     dto.setSize(product.getSize());
     dto.setColor(product.getColor());
     dto.setPrice(product.getPrice());
+    dto.setCategory(product.getCategory());
     dto.setCategoryId(product.getCategory().getId());
+    dto.setBrand(product.getBrand());
     dto.setBrandId(product.getBrand().getId());
+    dto.setSupplier(product.getSupplier());
     dto.setSupplierId(product.getSupplier().getId());
     return dto;
   }
@@ -127,31 +128,25 @@ public class ProductServiceImpl implements ProductService {
     product.setColor(dto.getColor());
     product.setPrice(dto.getPrice());
 
-    Category category =
-        categoryRepository
-            .findCategoryById(dto.getCategoryId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Categoria não encontrada com id: " + dto.getCategoryId()));
+    Category category = categoryRepository
+        .findCategoryById(dto.getCategoryId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Categoria não encontrada com id: " + dto.getCategoryId()));
     product.setCategory(category);
 
-    Brand brand =
-        brandRepository
-            .findBrandById(dto.getBrandId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Marca não encontrada com id: " + dto.getBrandId()));
+    Brand brand = brandRepository
+        .findBrandById(dto.getBrandId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Marca não encontrada com id: " + dto.getBrandId()));
     product.setBrand(brand);
 
-    Supplier supplier =
-        supplierRepository
-            .findSupplierById(dto.getSupplierId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Fornecedor não encontrado com id: " + dto.getSupplierId()));
+    Supplier supplier = supplierRepository
+        .findSupplierById(dto.getSupplierId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Fornecedor não encontrado com id: " + dto.getSupplierId()));
     product.setSupplier(supplier);
 
     return product;
