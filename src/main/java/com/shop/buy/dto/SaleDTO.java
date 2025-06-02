@@ -31,9 +31,11 @@ public class SaleDTO {
   @PastOrPresent(message = "Data da venda não pode estar no futuro")
   private LocalDateTime saleDate;
 
-  @NotNull(message = "Valor total é obrigatório")
-  @Positive(message = "Valor total deve ser um valor positivo")
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Valor total calculado a partir dos itens da venda")
   private BigDecimal totalValue;
+
+  @Positive(message = "Desconto deve ser um valor positivo")
+  private BigDecimal discount;
 
   @NotNull(message = "Itens da venda são obrigatórios")
   @NotEmpty(message = "A venda deve conter pelo menos um item")
