@@ -104,6 +104,9 @@ public class SaleServiceImpl implements SaleService {
           saleRepository
               .findById(savedSale.getId())
               .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
+
+      List<SaleItem> savedItems = saleItemRepository.findSaleItemsBySaleId(savedSale.getId());
+      savedSale.setItems(savedItems);
     }
 
     return convertToDTO(savedSale);
@@ -152,8 +155,15 @@ public class SaleServiceImpl implements SaleService {
 
     Sale updatedSale = saleRepository.save(sale);
 
-    List<SaleItem> savedItems = createSaleItems(saleDTO.getItems(), updatedSale);
-    updatedSale.setItems(savedItems);
+    if (saleDTO.getItems() != null && !saleDTO.getItems().isEmpty()) {
+      List<SaleItem> items = createSaleItems(saleDTO.getItems(), updatedSale);
+      for (SaleItem item : items) {
+        saleItemRepository.saveSaleItem(item);
+      }
+
+      List<SaleItem> savedItems = saleItemRepository.findSaleItemsBySaleId(updatedSale.getId());
+      updatedSale.setItems(savedItems);
+    }
 
     return convertToDTO(updatedSale);
   }
@@ -244,10 +254,8 @@ public class SaleServiceImpl implements SaleService {
             .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-    // Aplicar desconto se houver
     if (sale.getDiscount() != null) {
       total = total.subtract(sale.getDiscount());
-      // Garantir que o valor não seja negativo
       if (total.compareTo(BigDecimal.ZERO) < 0) {
         total = BigDecimal.ZERO;
       }
