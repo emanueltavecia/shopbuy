@@ -9,6 +9,10 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.shop.buy.model.Customer;
+import com.shop.buy.model.Employee;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +25,14 @@ public class SaleDTO {
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
 
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Customer customer;
+
   @NotNull(message = "Cliente é obrigatório")
   private Long customerId;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Employee employee;
 
   @NotNull(message = "Funcionário é obrigatório")
   private Long employeeId;
@@ -31,9 +41,7 @@ public class SaleDTO {
   @PastOrPresent(message = "Data da venda não pode estar no futuro")
   private LocalDateTime saleDate;
 
-  @Schema(
-      accessMode = Schema.AccessMode.READ_ONLY,
-      description = "Valor total calculado a partir dos itens da venda")
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Valor total calculado a partir dos itens da venda")
   private BigDecimal totalValue;
 
   @Positive(message = "Desconto deve ser um valor positivo")

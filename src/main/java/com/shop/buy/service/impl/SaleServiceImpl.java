@@ -55,10 +55,9 @@ public class SaleServiceImpl implements SaleService {
 
   @Override
   public SaleDTO getSaleById(Long id) {
-    Sale sale =
-        saleRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    Sale sale = saleRepository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
     return convertToDTO(sale);
   }
 
@@ -100,10 +99,9 @@ public class SaleServiceImpl implements SaleService {
         saleItemRepository.saveSaleItem(item);
       }
 
-      savedSale =
-          saleRepository
-              .findById(savedSale.getId())
-              .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
+      savedSale = saleRepository
+          .findById(savedSale.getId())
+          .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada"));
 
       List<SaleItem> savedItems = saleItemRepository.findSaleItemsBySaleId(savedSale.getId());
       savedSale.setItems(savedItems);
@@ -115,10 +113,9 @@ public class SaleServiceImpl implements SaleService {
   private void validateDiscount(SaleDTO saleDTO) {
     BigDecimal subtotal = BigDecimal.ZERO;
     if (saleDTO.getItems() != null) {
-      subtotal =
-          saleDTO.getItems().stream()
-              .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-              .reduce(BigDecimal.ZERO, BigDecimal::add);
+      subtotal = saleDTO.getItems().stream()
+          .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+          .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     if (saleDTO.getDiscount() != null && saleDTO.getDiscount().compareTo(subtotal) > 0) {
@@ -202,13 +199,11 @@ public class SaleServiceImpl implements SaleService {
               "Preço unitário deve ser informado e ser um valor positivo");
         }
 
-        Product product =
-            productRepository
-                .findProductById(itemDTO.getProductId())
-                .orElseThrow(
-                    () ->
-                        new EntityNotFoundException(
-                            "Produto não encontrado com id: " + itemDTO.getProductId()));
+        Product product = productRepository
+            .findProductById(itemDTO.getProductId())
+            .orElseThrow(
+                () -> new EntityNotFoundException(
+                    "Produto não encontrado com id: " + itemDTO.getProductId()));
 
         SaleItem saleItem = new SaleItem();
         saleItem.setSale(sale);
@@ -225,7 +220,9 @@ public class SaleServiceImpl implements SaleService {
   private SaleDTO convertToDTO(Sale sale) {
     SaleDTO dto = new SaleDTO();
     dto.setId(sale.getId());
+    dto.setCustomer(sale.getCustomer());
     dto.setCustomerId(sale.getCustomer().getId());
+    dto.setEmployee(sale.getEmployee());
     dto.setEmployeeId(sale.getEmployee().getId());
     dto.setSaleDate(sale.getSaleDate());
     dto.setDiscount(sale.getDiscount());
@@ -249,10 +246,9 @@ public class SaleServiceImpl implements SaleService {
       return BigDecimal.ZERO;
     }
 
-    BigDecimal total =
-        sale.getItems().stream()
-            .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal total = sale.getItems().stream()
+        .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     if (sale.getDiscount() != null) {
       total = total.subtract(sale.getDiscount());
@@ -293,22 +289,18 @@ public class SaleServiceImpl implements SaleService {
       throw new IllegalArgumentException("Método de pagamento é obrigatório");
     }
 
-    Customer customer =
-        customerRepository
-            .findCustomerById(dto.getCustomerId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Cliente não encontrado com id: " + dto.getCustomerId()));
+    Customer customer = customerRepository
+        .findCustomerById(dto.getCustomerId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Cliente não encontrado com id: " + dto.getCustomerId()));
     sale.setCustomer(customer);
 
-    Employee employee =
-        employeeRepository
-            .findEmployeeById(dto.getEmployeeId())
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        "Funcionário não encontrado com id: " + dto.getEmployeeId()));
+    Employee employee = employeeRepository
+        .findEmployeeById(dto.getEmployeeId())
+        .orElseThrow(
+            () -> new EntityNotFoundException(
+                "Funcionário não encontrado com id: " + dto.getEmployeeId()));
     sale.setEmployee(employee);
 
     return sale;
