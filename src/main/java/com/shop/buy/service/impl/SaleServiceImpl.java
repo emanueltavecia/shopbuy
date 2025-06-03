@@ -134,10 +134,9 @@ public class SaleServiceImpl implements SaleService {
       validateDiscount(saleDTO);
     }
 
-    Sale existingSale =
-        saleRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
+    saleRepository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Venda não encontrada com id: " + id));
 
     List<SaleItem> existingItems = saleItemRepository.findSaleItemsBySaleId(id);
     for (SaleItem item : existingItems) {
