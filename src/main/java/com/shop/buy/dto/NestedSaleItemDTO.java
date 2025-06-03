@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
+
+import com.shop.buy.model.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +19,9 @@ public class NestedSaleItemDTO {
 
   @Schema(accessMode = Schema.AccessMode.READ_ONLY)
   private Long id;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Product product;
 
   @NotNull(message = "Produto é obrigatório")
   private Long productId;

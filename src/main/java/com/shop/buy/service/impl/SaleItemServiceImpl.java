@@ -102,6 +102,7 @@ public class SaleItemServiceImpl implements SaleItemService {
     dto.setId(saleItem.getId());
     dto.setSaleId(saleItem.getSale().getId());
     dto.setProductId(saleItem.getProduct().getId());
+    dto.setProduct(saleItem.getProduct());
     dto.setQuantity(saleItem.getQuantity());
     dto.setUnitPrice(saleItem.getUnitPrice());
     return dto;

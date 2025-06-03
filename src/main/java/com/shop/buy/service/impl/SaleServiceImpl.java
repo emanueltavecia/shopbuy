@@ -267,6 +267,7 @@ public class SaleServiceImpl implements SaleService {
   private NestedSaleItemDTO convertToSaleItemDTO(SaleItem saleItem) {
     NestedSaleItemDTO dto = new NestedSaleItemDTO();
     dto.setId(saleItem.getId());
+    dto.setProduct(saleItem.getProduct());
     dto.setProductId(saleItem.getProduct().getId());
     dto.setQuantity(saleItem.getQuantity());
     dto.setUnitPrice(saleItem.getUnitPrice());
