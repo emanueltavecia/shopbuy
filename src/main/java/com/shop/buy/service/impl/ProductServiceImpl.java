@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com id: " + id));
 
     Product product = convertToEntity(productDTO);
-    product.setId(id); // Ensure ID is set for update
+    product.setId(id);
     Product updatedProduct = productRepository.save(product);
     return convertToDTO(updatedProduct);
   }

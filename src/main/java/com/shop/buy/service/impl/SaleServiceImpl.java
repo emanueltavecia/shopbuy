@@ -78,7 +78,6 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public SaleDTO createSale(SaleDTO saleDTO) {
-    // Verificar se o desconto é válido
     if (saleDTO.getItems() != null
         && !saleDTO.getItems().isEmpty()
         && saleDTO.getDiscount() != null) {
@@ -127,7 +126,6 @@ public class SaleServiceImpl implements SaleService {
   @Override
   @Transactional
   public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
-    // Verificar se o desconto é válido
     if (saleDTO.getItems() != null
         && !saleDTO.getItems().isEmpty()
         && saleDTO.getDiscount() != null) {
@@ -230,7 +228,6 @@ public class SaleServiceImpl implements SaleService {
       dto.setPaymentMethod(sale.getPaymentMethod().name());
     }
 
-    // Calcular o valor total a partir dos itens de venda
     BigDecimal totalValue = calculateTotalValue(sale);
     dto.setTotalValue(totalValue);
 
