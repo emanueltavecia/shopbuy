@@ -1,5 +1,6 @@
 package com.shop.buy.dto;
 
+import com.shop.buy.model.Product;
 import com.shop.buy.validation.ValidationGroups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -26,6 +27,9 @@ public class DirectSaleItemDTO {
       groups = ValidationGroups.DirectSaleItemOperation.class,
       message = "ID da venda é obrigatório ao criar/editar um item diretamente.")
   private Long saleId;
+
+  @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+  private Product product;
 
   @NotNull(message = "Produto é obrigatório")
   private Long productId;
