@@ -40,7 +40,7 @@ public class DataLoader {
         return;
       }
 
-      // Load brands
+      // cadastrar marcas
       Brand nike = new Brand();
       nike.setName("Nike");
       nike.setCountry("Estados Unidos");
@@ -59,7 +59,7 @@ public class DataLoader {
       puma.setDescription("Produtos esportivos e de estilo de vida");
       brandRepository.save(puma);
 
-      // Create categories
+      // cadastrar categorias
       Category shirts = new Category();
       shirts.setName("Camisetas");
       shirts.setDescription("Todos os tipos de camisas e camisetas");
@@ -75,7 +75,7 @@ public class DataLoader {
       shoes.setDescription("Calçados de todos os tipos");
       categoryRepository.save(shoes);
 
-      // Load suppliers
+      // cadastrar fornecedores
       Supplier supplier1 = new Supplier();
       supplier1.setName("Mundo dos Tecidos");
       supplier1.setCnpj("12.345.678/0001-90");
@@ -90,7 +90,7 @@ public class DataLoader {
       supplier2.setEmail("info@solucoestexteis.com");
       supplierRepository.save(supplier2);
 
-      // Load products
+      // cadastrar produtos
       Product product1 = new Product();
       product1.setName("Camiseta Esportiva");
       product1.setSize("M");
@@ -121,7 +121,7 @@ public class DataLoader {
       product3.setSupplier(supplier1);
       productRepository.save(product3);
 
-      // Load customers
+      // cadastrar clientes
       Customer customer1 = new Customer();
       customer1.setName("João da Silva");
       customer1.setCpf("123.456.789-01");
@@ -136,7 +136,7 @@ public class DataLoader {
       customer2.setEmail("maria.silva@exemplo.com");
       customerRepository.save(customer2);
 
-      // Load employees
+      // cadastrar funcionários
       Employee employee1 = new Employee();
       employee1.setName("Roberto Santos");
       employee1.setRole("Gerente");
@@ -151,7 +151,7 @@ public class DataLoader {
       employee2.setHireDate(LocalDate.of(2021, 3, 10));
       employeeRepository.save(employee2);
 
-      // Create sales
+      // cadastrar vendas
       Sale sale1 = new Sale();
       sale1.setCustomer(customer1);
       sale1.setEmployee(employee1);
@@ -168,7 +168,7 @@ public class DataLoader {
       sale2.setPaymentMethod(PaymentMethod.PIX);
       saleRepository.save(sale2);
 
-      // Create sale items
+      // cadastrar itens de venda
       SaleItem saleItem1 = new SaleItem();
       saleItem1.setSale(sale1);
       saleItem1.setProduct(product1);
@@ -190,7 +190,7 @@ public class DataLoader {
       saleItem3.setUnitPrice(product3.getPrice());
       saleItemRepository.save(saleItem3);
 
-      // Update sale with items
+      // atualizar vendas com os itens
       List<SaleItem> items1 = new ArrayList<>();
       items1.add(saleItem1);
       items1.add(saleItem2);

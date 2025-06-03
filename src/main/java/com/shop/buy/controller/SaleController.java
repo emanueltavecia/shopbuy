@@ -208,7 +208,6 @@ public class SaleController {
           @Valid
           @RequestBody
           SaleDTO saleDTO) {
-    // Validação adicional do método de pagamento
     if (saleDTO.getPaymentMethod() != null) {
       try {
         PaymentMethod.valueOf(saleDTO.getPaymentMethod().toUpperCase());
@@ -268,7 +267,6 @@ public class SaleController {
           @Valid
           @RequestBody
           SaleDTO saleDTO) {
-    // Validação adicional do método de pagamento
     if (saleDTO.getPaymentMethod() != null) {
       try {
         PaymentMethod.valueOf(saleDTO.getPaymentMethod().toUpperCase());
