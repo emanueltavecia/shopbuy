@@ -3,7 +3,7 @@
 services:
   postgres:
     image: postgres
-    container_name: shopbuy
+    container_name: shopbuy-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
